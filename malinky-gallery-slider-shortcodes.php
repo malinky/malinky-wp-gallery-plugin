@@ -65,20 +65,18 @@ function malinky_gallery_slider( $atts )
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
 			<ul class="malinky-gallery-slider">
-		<?php }
-				if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 1 ) { ?>
+		<?php } ?>
 				<li>
 					<div class="col">
-				<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
+						<div class="col-item col-item-half col-item-quarter--medium col-item-full--small">
 							<div class="lightbox-link-holder">
 								<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
 								<div class="lightbox-hover"></div>
 							</div>
-						</div><?php if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 0 ) { ?>
+						</div>
 					</div><!-- .col nested -->
 				</li>
-				<?php }
-		if ( ($gallery_slider_wp_query->current_post + 1) == $gallery_slider_post_count ) { ?>				
+		<?php if ( ($gallery_slider_wp_query->current_post + 1) == $gallery_slider_post_count ) { ?>				
 			</ul>
 			</div>
 		</div>
