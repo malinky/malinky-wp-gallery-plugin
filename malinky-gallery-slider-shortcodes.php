@@ -73,8 +73,8 @@ function malinky_gallery_slider( $atts )
 					<li>
 						<div class="col">
 					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
-								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-									<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-image-size="1000x750">
+								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-mgs-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+									<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-mgs-image-size="1000x750">
 										<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
 									</a>
 								</div>
@@ -88,8 +88,8 @@ function malinky_gallery_slider( $atts )
 				if ( malinky_is_phone_tablet() ) { ?>
 
 					<li>
-						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-							<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-image-size="1000x750">
+						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-mgs-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+							<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-mgs-image-size="1000x750">
 								<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
 							</a>
 						</div>

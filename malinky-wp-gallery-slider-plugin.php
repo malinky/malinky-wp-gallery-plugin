@@ -9,6 +9,8 @@
  * License: GPL2
  *
  * Dependencies: Photoswipe (installed in theme) and Mobile Detect.
+ *
+ * @todo Look at implmentation of shortcode, limit <div col> etc to calling in template not in shortcode.
  */
 
 class Malinky_Gallery_Slider

@@ -39,7 +39,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
              */
             linkEl = divEl.children[0];
 
-            size = linkEl.getAttribute('data-image-size').split('x');
+            size = linkEl.getAttribute('data-mgs-image-size').split('x');
 
             /*
              * Create slide items object.
@@ -115,7 +115,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
         /*
          * Save index of the clicked thumbnail.
          */
-        index = parseInt(clickedListItem.getAttribute('data-image-index'));
+        index = parseInt(clickedListItem.getAttribute('data-mgs-image-index'));
 
         /*
          * Open PhotoSwipe if valid index found.
@@ -153,6 +153,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
         options = {
             index: index,
             history: false,
+            closeOnScroll: false,
             getThumbBoundsFn: function(index) {
                 // See Options -> getThumbBoundsFn section of documentation for more info
                 var thumbnail = items[index].el.getElementsByTagName('img')[0], // find thumbnail
@@ -205,7 +206,7 @@ initPhotoSwipeFromDOM('.malinky-gallery-slider');
 
 jQuery(document).ready(function($){
 
-    /*
+    /**
      * Slider used generally on sport page.
      */
     $('.malinky-gallery-slider').imagesLoaded(function(instance) {
@@ -232,7 +233,7 @@ jQuery(document).ready(function($){
             
             malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 60;
 
-            mobile_slider = $('.malinky-gallery-slider').bxSlider({
+            malinky_gallery_slider_mobile_slider = $('.malinky-gallery-slider').bxSlider({
                 pager: false,
                 slideMargin: 10,
                 infiniteLoop: false,
@@ -256,7 +257,7 @@ jQuery(document).ready(function($){
              */
             var resizeTimer;
 
-            /*
+            /**
              * After a resize, orientation switch reload BX Slider so new thumbnail sizes are generated.
              */
             function resizeFunction() {
@@ -266,7 +267,7 @@ jQuery(document).ready(function($){
 
                 malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 60;
 
-                mobile_slider.reloadSlider({
+                malinky_gallery_slider_mobile_slider.reloadSlider({
                     pager: false,
                     slideMargin: 10,
                     infiniteLoop: false,
@@ -286,8 +287,9 @@ jQuery(document).ready(function($){
                 });
             };
 
-            // On resize, run the function and reset the timeout
-            // 250 is the delay in milliseconds. Change as you see fit.
+            /*
+             * On resize, run the function and reset the timeout.
+             */
             $(window).resize(function() {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(resizeFunction, 250);
