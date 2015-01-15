@@ -2,11 +2,13 @@
 /**
  * Plugin Name: Malinky Gallery Slider Plugin
  * Plugin URI: https://github.com/malinky/malinky-wp-gallery-slider-plugin
- * Description: Display gallery slider using attachment custom post type and BX Slider
+ * Description: Display gallery slider using attachment custom post type and BX Slider.
  * Version: 1.0
  * Author: Malinky
  * Author URI: https://github.com/malinky
  * License: GPL2
+ *
+ * Dependencies: Photoswipe (installed in theme) and Mobile Detect.
  */
 
 class Malinky_Gallery_Slider
