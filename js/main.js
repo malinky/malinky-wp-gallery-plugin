@@ -35,11 +35,12 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
             }
 
             /*
-             * <a> containing link to large image and data-image-size.
+             * <a> containing link to large image and data-image-size-large.
+             * Optional data-image-medium and data-image-size-medium.
              */
             linkEl = divEl.children[0];
 
-            size = linkEl.getAttribute('data-mgs-image-size').split('x');
+            size = linkEl.getAttribute('data-image-size-large').split('x');
 
             /*
              * Create slide items object.
@@ -56,6 +57,30 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
             if(linkEl.children.length > 0) {
                 item.msrc = linkEl.children[0].getAttribute('src');
             } 
+
+            /*
+             * Create medium slide items object if data exists.
+             */
+            var mediumSrc = linkEl.getAttribute('data-image-medium');
+            if(mediumSrc) {
+                size = linkEl.getAttribute('data-image-size-medium').split('x');
+                /*
+                 * Medium image.
+                 */
+                item.m = {
+                    src: mediumSrc,
+                    w: parseInt(size[0], 10),
+                    h: parseInt(size[1], 10)
+                };
+            }
+            /*
+             * Original image.
+             */
+            item.o = {
+                src: item.src,
+                w: item.w,
+                h: item.h
+            };
 
             /*
              * Save for getThumbBoundsFn.
@@ -115,7 +140,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
         /*
          * Save index of the clicked thumbnail.
          */
-        index = parseInt(clickedListItem.getAttribute('data-mgs-image-index'));
+        index = parseInt(clickedListItem.getAttribute('data-image-index'));
 
         /*
          * Open PhotoSwipe if valid index found.
@@ -169,15 +194,82 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
             options.showAnimationDuration = 0;
         }
 
+
         /*
          * Pass data to PhotoSwipe. Don't initialize yet as need to set up responsive image swaps.
          */
         gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
 
+
+        /*
+         * Reponsive image swapping
+         * http://photoswipe.com/documentation/responsive-images.html
+         */
+        var realViewportWidth,
+            useLargeImages = false,
+            firstResize = true,
+            imageSrcWillChange;
+
+        gallery.listen('beforeResize', function() {
+
+            var dpiRatio = window.devicePixelRatio ? window.devicePixelRatio : 1;
+            dpiRatio = Math.min(dpiRatio, 2.5);
+            realViewportWidth = gallery.viewportSize.x * dpiRatio;
+
+            /*
+             * First condition is for retina mobiles, potentially 2 pixel density 600px wide so 1200px.
+             * Other conditions pretty much show large images on computer size screens.
+             * May require some tweaking.
+             */
+            if(realViewportWidth >= 1200 || (!gallery.likelyTouchDevice && realViewportWidth > 800) || screen.width > 1200 ) {
+                if(!useLargeImages) {
+                    useLargeImages = true;
+                    imageSrcWillChange = true;
+                }
+                
+            } else {
+                if(useLargeImages) {
+                    useLargeImages = false;
+                    imageSrcWillChange = true;
+                }
+            }
+
+            if(imageSrcWillChange && !firstResize) {
+                gallery.invalidateCurrItems();
+            }
+
+            if(firstResize) {
+                firstResize = false;
+            }
+
+            imageSrcWillChange = false;
+
+        });
+
+        gallery.listen('gettingData', function(index, item) {
+            if( useLargeImages ) {
+                item.src = item.o.src;
+                item.w = item.o.w;
+                item.h = item.o.h;
+            } else {
+                item.src = item.m.src;
+                item.w = item.m.w;
+                item.h = item.m.h;
+            }
+        });
+
+
         /*
          * Initialize Photoswipe.
          */        
         gallery.init();
+
+
+        /*
+         * Debug responsive.
+         */
+        console.log(window.devicePixelRatio);
+        console.log('realViewportWidth ' + gallery.viewportSize.x * Math.min(window.devicePixelRatio, 2.5));
 
     };
 
@@ -231,7 +323,7 @@ jQuery(document).ready(function($){
 
         } else {
             
-            malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 60;
+            malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 100;
 
             malinky_gallery_slider_mobile_slider = $('.malinky-gallery-slider').bxSlider({
                 pager: false,
@@ -247,7 +339,7 @@ jQuery(document).ready(function($){
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                     $('.malinky-gallery-slider-loading').hide();
                     $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
-                    $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '30px'});
+                    $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
                     $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
                 }
             });
@@ -265,7 +357,7 @@ jQuery(document).ready(function($){
                 $('.malinky-gallery-slider-wrapper').removeClass('malinky-gallery-slider-wrapper-show');
                 $('.malinky-gallery-slider-loading').show();
 
-                malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 60;
+                malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 100;
 
                 malinky_gallery_slider_mobile_slider.reloadSlider({
                     pager: false,
@@ -281,7 +373,7 @@ jQuery(document).ready(function($){
                         $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                         $('.malinky-gallery-slider-loading').hide();
                         $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
-                        $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '30px'});
+                        $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
                         $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
                     }
                 });

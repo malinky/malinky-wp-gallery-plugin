@@ -59,6 +59,13 @@ function malinky_gallery_slider( $atts )
 
 	while ( $gallery_slider_wp_query->have_posts() ) : $gallery_slider_wp_query->the_post();
 	
+		/*
+		 * Get image url, width and height array.
+		 */
+		$image_meta_thumbnail 	= wp_get_attachment_image_src( get_the_ID(), 'malinky_thumbnail' );
+		$image_meta_medium 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_medium' );
+		$image_meta_large 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_large' );
+
 		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
 		<div class="col-item col-item-full col-item--margin-bottom-20">
 			<h3 class="grey-underline">Photos</h3>
@@ -73,9 +80,9 @@ function malinky_gallery_slider( $atts )
 					<li>
 						<div class="col">
 					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
-								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-mgs-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-									<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-mgs-image-size="1000x750">
-										<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
+								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+									<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
+										<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" />
 									</a>
 								</div>
 							</div><?php if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 0 ) { ?>
@@ -88,9 +95,9 @@ function malinky_gallery_slider( $atts )
 				if ( malinky_is_phone_tablet() ) { ?>
 
 					<li>
-						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-mgs-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-							<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-mgs-image-size="1000x750">
-								<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
+						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+							<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
+								<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" />
 							</a>
 						</div>
 					</li>
