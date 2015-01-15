@@ -57,21 +57,6 @@ function malinky_gallery_slider( $atts )
 	 */
 	$gallery_slider_post_count = $gallery_slider_post_count > $gallery_slider_wp_query->found_posts ? $gallery_slider_wp_query->found_posts : $gallery_slider_post_count;
 
-	?><div class="my-gallery" itemscope itemtype="http://schema.org/ImageGallery"><?php
-
-	while ( $gallery_slider_wp_query->have_posts() ) : $gallery_slider_wp_query->the_post(); ?>
-	
-	    <figure itemscope itemtype="http://schema.org/ImageObject">
-	        <a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-size="1000x750">
-	            <img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="thumbnail" alt="Image description" />
-	        </a>
-	        <figcaption itemprop="caption description">Image caption</figcaption>
-	    </figure>
-
-	<?php endwhile;
-
-	?></div><?php
-	
 	while ( $gallery_slider_wp_query->have_posts() ) : $gallery_slider_wp_query->the_post();
 	
 		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
@@ -79,7 +64,7 @@ function malinky_gallery_slider( $atts )
 			<h3 class="grey-underline">Photos</h3>
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
-				<ul class="malinky-gallery-slider">
+				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
 		<?php }
 
 				if ( malinky_is_computer() ) { 
@@ -88,9 +73,10 @@ function malinky_gallery_slider( $atts )
 					<li>
 						<div class="col">
 					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
-								<div class="lightbox-link-holder">
-									<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
-									<div class="lightbox-hover"></div>
+								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+									<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-image-size="1000x750">
+										<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
+									</a>
 								</div>
 							</div><?php if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 0 ) { ?>
 						</div><!-- .col nested -->
@@ -102,9 +88,10 @@ function malinky_gallery_slider( $atts )
 				if ( malinky_is_phone_tablet() ) { ?>
 
 					<li>
-						<div class="lightbox-link-holder">
-							<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
-							<div class="lightbox-hover"></div>
+						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
+							<a href="<?php echo wp_get_attachment_url(get_the_ID()); ?>" itemprop="contentUrl" data-image-size="1000x750">
+								<img src="<?php echo wp_get_attachment_url(get_the_ID()); ?>" />
+							</a>
 						</div>
 					</li>
 

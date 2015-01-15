@@ -97,6 +97,14 @@
     background-size: 50px;
 }
 
+.malinky-gallery-slider-image {
+    margin-bottom: 20px;
+}
+
+.malinky-gallery-slider-image a {
+    display: block;
+}
+
 /*
  * Used as div holder for all lightbox images.
  */

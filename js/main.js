@@ -41,7 +41,7 @@ jQuery(document).ready(function($){
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                     $('.malinky-gallery-slider-loading').hide();
                     $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
-                    $('.malinky-gallery-slider').css('left', '25px');
+                    //$('.malinky-gallery-slider').css('left', '25px');
                     $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
                 }
             });
