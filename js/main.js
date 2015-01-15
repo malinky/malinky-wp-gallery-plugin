@@ -234,6 +234,10 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
                 }
             }
 
+            /*
+             * imageSrcWillChange needs to be true.
+             * firstResize needs to be false.
+             */
             if(imageSrcWillChange && !firstResize) {
                 gallery.invalidateCurrItems();
             }
