@@ -302,8 +302,15 @@ initPhotoSwipeFromDOM('.malinky-gallery-slider');
 
 jQuery(document).ready(function($){
 
+    function show_loading()
+    {
+        $('.malinky-gallery-slider-loading').show();
+    }
+
+    var loading_timer = window.setTimeout(show_loading, 750);
+
     /**
-     * Slider used generally on sport page.
+     * Slider used generally on sport page and projects
      */
     $('.malinky-gallery-slider').imagesLoaded(function(instance) {
 
@@ -321,6 +328,7 @@ jQuery(document).ready(function($){
                 adaptiveHeight: true,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
+                    window.clearTimeout(loading_timer);
                     $('.malinky-gallery-slider-loading').hide();
                 }
             });

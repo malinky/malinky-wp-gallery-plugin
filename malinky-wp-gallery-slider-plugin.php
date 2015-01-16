@@ -8,7 +8,7 @@
  * Author URI: https://github.com/malinky
  * License: GPL2
  *
- * Dependencies: Photoswipe (installed in theme) and Mobile Detect.
+ * Dependencies: Photoswipe (installed in theme), Mobile Detect and ACF.
  *
  * @todo Look at implmentation of shortcode, limit <div col> etc to calling in template not in shortcode.
  */

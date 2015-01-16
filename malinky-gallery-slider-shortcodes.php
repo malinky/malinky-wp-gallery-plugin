@@ -118,3 +118,94 @@ function malinky_gallery_slider( $atts )
 	wp_reset_postdata();
 
 }
+
+
+add_shortcode( 'malinky-project-slider', 'malinky_project_slider' );
+
+/**
+* Output the project gallery and thumbnails
+*
+* @param 	str  		$images_per_slide	Number of images to display per slide.
+* @return 	str
+*/
+
+/**
+ * Shortcode Usage
+ *
+ * [malinky-project-slider 
+ * images_per_slide = Number of images per slide (default 8).
+ * ]
+ */
+function malinky_project_slider( $atts )
+{
+
+	$atts = shortcode_atts(
+		array(
+	        'images_per_slide' 	=> 8
+    	),
+		$atts,
+		'malinky-project-slider'
+	);
+
+	/**
+	 * Main project gallery query using ACF.
+	 */
+	$image_meta = get_field( 'project_gallery' );
+
+	if ( ! $image_meta ) return;
+
+	$total_images = count( $image_meta );
+
+	/**
+	 * $current_image used in a similar way to post count. Actual array keys starting at 0.
+	 */
+    foreach ( $image_meta as $current_image => $image ) {
+
+		if ( $current_image == 0 ) { ?>
+		<div class="col-item col-item-full">
+			<h5>Photos</h5>
+			<div class="malinky-gallery-slider-loading"></div>
+			<div class="malinky-gallery-slider-wrapper">
+				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
+		<?php }
+
+				if ( malinky_is_computer() ) { 
+				
+					if ( ($current_image + 1) % $atts['images_per_slide'] == 1 ) { ?>
+					<li>
+						<div class="col">
+					<?php } ?><div class="col-item col-item-quarter col-item-half--small">
+								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
+									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
+										<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" />
+									</a>
+								</div>
+							</div><?php if ( ($current_image + 1) % $atts['images_per_slide'] == 0 ) { ?>
+						</div><!-- .col nested -->
+					</li>
+					<?php }
+
+				}
+
+				if ( malinky_is_phone_tablet() ) { ?>
+
+					<li>
+						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
+							<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
+								<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" />
+							</a>
+						</div>
+					</li>
+
+				<?php }
+
+		if ( ($current_image + 1) == $total_images ) { ?>				
+				</ul>
+			</div>
+		</div>
+
+		<?php }
+
+    }
+
+}
