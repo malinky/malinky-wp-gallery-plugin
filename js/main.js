@@ -349,6 +349,7 @@ jQuery(document).ready(function($){
                 adaptiveHeight: true,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
+                    window.clearTimeout(loading_timer);
                     $('.malinky-gallery-slider-loading').hide();
                     $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
                     $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
@@ -383,6 +384,7 @@ jQuery(document).ready(function($){
                     adaptiveHeight: true,
                     onSliderLoad: function() {
                         $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
+                        window.clearTimeout(loading_timer);                        
                         $('.malinky-gallery-slider-loading').hide();
                         $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
                         $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
