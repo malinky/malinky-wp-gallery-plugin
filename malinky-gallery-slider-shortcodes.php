@@ -42,6 +42,16 @@ function malinky_gallery_slider( $atts )
 	);
 
 	/**
+	 * Fix for -ve image_per_slide.
+	 * Will also set image_per_slide to 0 if not an integer.
+	 * If it is 0 set to default so shortcode still works.
+	 * Fix for the modulus calcuation below if image_per_slide is 1.
+	 */
+	$atts['images_per_slide'] = absint( $atts['images_per_slide'] );
+	$atts['images_per_slide'] = $atts['images_per_slide'] != 0 ? $atts['images_per_slide'] : 8;
+	$atts['images_modulus'] = $atts['images_per_slide'] != 1 ? 1 : 0;
+	
+	/**
 	 * Main WP_Query.
 	 */
 	$gallery_slider_wp_query = malinky_gallery_slider_wp_query( $atts['taxonomy_name'], $atts['taxonomy_term'], $atts['total_images'], $atts['orderby'] );
@@ -76,7 +86,7 @@ function malinky_gallery_slider( $atts )
 
 				if ( malinky_is_computer() ) { 
 				
-					if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 1 ) { ?>
+					if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
 						<div class="col">
 					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
@@ -120,10 +130,10 @@ function malinky_gallery_slider( $atts )
 }
 
 
-add_shortcode( 'malinky-project-slider', 'malinky_project_slider' );
+add_shortcode( 'malinky-post-slider', 'malinky_post_slider' );
 
 /**
-* Output the project gallery and thumbnails
+* Output the a gallery and thumbnails added to a post with ACF.
 *
 * @param 	str  		$images_per_slide	Number of images to display per slide.
 * @return 	str
@@ -132,11 +142,11 @@ add_shortcode( 'malinky-project-slider', 'malinky_project_slider' );
 /**
  * Shortcode Usage
  *
- * [malinky-project-slider 
+ * [malinky-post-slider 
  * images_per_slide = Number of images per slide (default 8).
  * ]
  */
-function malinky_project_slider( $atts )
+function malinky_post_slider( $atts )
 {
 
 	$atts = shortcode_atts(
@@ -144,13 +154,23 @@ function malinky_project_slider( $atts )
 	        'images_per_slide' 	=> 8
     	),
 		$atts,
-		'malinky-project-slider'
+		'malinky-post-slider'
 	);
 
 	/**
-	 * Main project gallery query using ACF.
+	 * Fix for -ve image_per_slide.
+	 * Will also set image_per_slide to 0 if not an integer.
+	 * If it is 0 set to default so shortcode still works.
+	 * Fix for the modulus calcuation below if image_per_slide is 1.
 	 */
-	$image_meta = get_field( 'project_gallery' );
+	$atts['images_per_slide'] = absint( $atts['images_per_slide'] );
+	$atts['images_per_slide'] = $atts['images_per_slide'] != 0 ? $atts['images_per_slide'] : 8;
+	$atts['images_modulus'] = $atts['images_per_slide'] != 1 ? 1 : 0;
+
+	/**
+	 * Main gallery query using ACF.
+	 */
+	$image_meta = get_field( 'post_gallery' );
 
 	if ( ! $image_meta ) return;
 
@@ -169,9 +189,9 @@ function malinky_project_slider( $atts )
 				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
 		<?php }
 
-				if ( malinky_is_computer() ) { 
+				if ( malinky_is_computer() ) {
 				
-					if ( ($current_image + 1) % $atts['images_per_slide'] == 1 ) { ?>
+					if ( ($current_image + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
 						<div class="col">
 					<?php } ?><div class="col-item col-item-quarter col-item-half--small">

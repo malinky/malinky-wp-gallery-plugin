@@ -310,7 +310,7 @@ jQuery(document).ready(function($){
     var loading_timer = setTimeout(show_loading, 750);
 
     /**
-     * Slider used generally on sport page and projects
+     * Slider used generally on sport pages, projects and groundcare machinery
      */
     $('.malinky-gallery-slider').imagesLoaded(function(instance) {
 
