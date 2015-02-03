@@ -325,11 +325,25 @@ jQuery(document).ready(function($){
                 controls: true,
                 nextText: '',
                 prevText: '',
-                adaptiveHeight: true,
+                adaptiveHeight: false,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                     clearTimeout(loading_timer);
                     $('.malinky-gallery-slider-loading').hide();
+                },
+                onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                    /*
+                     * Find next two images in whole slider object.
+                     * Then loop through swapping out the data-src into the actual src ready of next slide.
+                     * Loads two at once on mobile so the next is partially visible.
+                     */
+                    var imagesPerSlide = slider.find('img').attr('data-imageps').slice(0,1);   
+                    var $lazyNextImg = slider.find('.lazy').slice(0,imagesPerSlide);
+                    $.each($lazyNextImg, function( index, value ) {
+                        var loadimg = value.getAttribute('data-src');
+                        value.setAttribute('src', loadimg);
+                        $(value).removeClass('lazy');
+                    });
                 }
             });
 
@@ -346,7 +360,7 @@ jQuery(document).ready(function($){
                 controls: true,
                 nextText: '',
                 prevText: '',
-                adaptiveHeight: true,
+                adaptiveHeight: false,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                     clearTimeout(loading_timer);
@@ -354,6 +368,20 @@ jQuery(document).ready(function($){
                     $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
                     $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
                     $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
+                },
+                onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                    /*
+                     * Find next two images in whole slider object.
+                     * Then loop through swapping out the data-src into the actual src ready of next slide.
+                     * Loads the next image on mobile so the next is partially visible.
+                     */
+                    var $lazyNextImg = malinky_gallery_slider_mobile_slider.find('.lazy').slice(0,1);
+                    console.log($lazyNextImg);
+                    $.each($lazyNextImg, function(index, value) {
+                        var loadimg = value.getAttribute('data-src');
+                        value.setAttribute('src', loadimg);
+                        $(value).removeClass('lazy');
+                    });
                 }
             });
 
