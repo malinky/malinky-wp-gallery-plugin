@@ -340,8 +340,9 @@ jQuery(document).ready(function($){
                     var imagesPerSlide = slider.find('img').attr('data-imageps').slice(0,1);   
                     var $lazyNextImg = slider.find('.lazy').slice(0,imagesPerSlide);
                     $.each($lazyNextImg, function( index, value ) {
-                        var loadimg = value.getAttribute('data-src');
-                        value.setAttribute('src', loadimg);
+                        var loadimg = $(value).attr('data-src');
+                        console.log(loadimg);
+                        $(value).attr('src', loadimg);
                         $(value).removeClass('lazy');
                     });
                 }
@@ -378,8 +379,8 @@ jQuery(document).ready(function($){
                     var $lazyNextImg = malinky_gallery_slider_mobile_slider.find('.lazy').slice(0,1);
                     console.log($lazyNextImg);
                     $.each($lazyNextImg, function(index, value) {
-                        var loadimg = value.getAttribute('data-src');
-                        value.setAttribute('src', loadimg);
+                        var loadimg = $(value).attr('data-src');
+                        $(value).attr('src', loadimg);
                         $(value).removeClass('lazy');
                     });
                 }
