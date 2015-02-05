@@ -17,8 +17,8 @@ add_shortcode( 'malinky-gallery-slider', 'malinky_gallery_slider' );
  * Shortcode Usage
  *
  * [malinky-gallery-slider 
- * taxonomy_name 	= malinky_gallery_slider_sports (default) || malinky_gallery_slider_machines
- * taxonomy_term 	= A taxonomy term likes bowls.
+ * taxonomy_name 	= malinky_gallery_slider_sports (default).
+ * taxonomy_term 	= A taxonomy term likes bowls (default).
  * images_per_slide = Number of images per slide (default 8).
  * total_images 	= Any number (default -1) which displays all.
  * orderby 			= WP_Query orberby (default date) otherwise rand is useful.
@@ -32,7 +32,7 @@ function malinky_gallery_slider( $atts )
 	$atts = shortcode_atts(
 		array(
 	        'taxonomy_name' 	=> 'malinky_gallery_slider_sports',
-	        'taxonomy_term' 	=> '',
+	        'taxonomy_term' 	=> 'bowls',
 	        'images_per_slide' 	=> 8,
 	        'total_images' 		=> -1,
 	        'orderby' 			=> 'date'
@@ -79,6 +79,7 @@ function malinky_gallery_slider( $atts )
 		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
 		<div class="col-item col-item-full col-item--margin-bottom-20">
 			<h3 class="grey-underline">Photos</h3>
+			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
 				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
@@ -192,6 +193,7 @@ function malinky_post_slider( $atts )
 		if ( $current_image == 0 ) { ?>
 		<div class="col-item col-item-full">
 			<h5>Photos</h5>
+			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
 				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
