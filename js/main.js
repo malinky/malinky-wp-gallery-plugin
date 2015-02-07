@@ -302,12 +302,12 @@ initPhotoSwipeFromDOM('.malinky-gallery-slider');
 
 jQuery(document).ready(function($){
 
-    function show_loading()
+    function mgsShowLoading()
     {
         $('.malinky-gallery-slider-loading').show();
     }
 
-    var loading_timer = setTimeout(show_loading, 750);
+    var mgsLoadingTimer = setTimeout(mgsShowLoading, 750);
 
     /**
      * Slider used generally on sport pages, projects and groundcare machinery
@@ -328,7 +328,7 @@ jQuery(document).ready(function($){
                 adaptiveHeight: false,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                    clearTimeout(loading_timer);
+                    clearTimeout(mgsLoadingTimer);
                     $('.malinky-gallery-slider-loading').hide();
                 },
                 onSlideBefore: function($slideElement, oldIndex, newIndex) {
@@ -341,7 +341,6 @@ jQuery(document).ready(function($){
                     var $lazyNextImg = slider.find('.lazy').slice(0,imagesPerSlide);
                     $.each($lazyNextImg, function( index, value ) {
                         var loadimg = $(value).attr('data-src');
-                        console.log(loadimg);
                         $(value).attr('src', loadimg);
                         $(value).removeClass('lazy');
                     });
@@ -364,7 +363,7 @@ jQuery(document).ready(function($){
                 adaptiveHeight: false,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                    clearTimeout(loading_timer);
+                    clearTimeout(mgsLoadingTimer);
                     $('.malinky-gallery-slider-loading').hide();
                     $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
                     $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
@@ -377,7 +376,6 @@ jQuery(document).ready(function($){
                      * Loads the next image on mobile so the next is partially visible.
                      */
                     var $lazyNextImg = malinky_gallery_slider_mobile_slider.find('.lazy').slice(0,1);
-                    console.log($lazyNextImg);
                     $.each($lazyNextImg, function(index, value) {
                         var loadimg = $(value).attr('data-src');
                         $(value).attr('src', loadimg);
@@ -413,7 +411,7 @@ jQuery(document).ready(function($){
                     adaptiveHeight: true,
                     onSliderLoad: function() {
                         $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                        clearTimeout(loading_timer);                        
+                        clearTimeout(mgsLoadingTimer);                        
                         $('.malinky-gallery-slider-loading').hide();
                         $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
                         $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
@@ -425,7 +423,7 @@ jQuery(document).ready(function($){
             /*
              * On resize, run the function and reset the timeout.
              */
-            $(window).resize(function() {
+            $(window).bind('resize.mgs', function() {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(resizeFunction, 250);
             });
