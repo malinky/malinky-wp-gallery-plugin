@@ -87,9 +87,9 @@ function malinky_gallery_slider( $atts )
 			<h3 class="grey-underline">Photos</h3>
 			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
-			<div class="malinky-gallery-slider-wrapper">
-				<ul class="malinky-gallery-slider" itemscope itemtype="http://schema.org/ImageGallery">
+			<div class="malinky-gallery-slider-wrapper" itemscope itemtype="http://schema.org/ImageGallery">
 				<meta itemprop="about" content="<?php echo esc_attr( $atts['taxonomy_term_description']->description ); ?>" />
+				<ul class="malinky-gallery-slider">
 		<?php }
 
 				if ( malinky_is_computer() ) { 
@@ -204,9 +204,9 @@ function malinky_post_slider( $atts )
 			<h5>Photos</h5>
 			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
-			<div class="malinky-gallery-slider-wrapper">
-				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
+			<div class="malinky-gallery-slider-wrapper" itemscope itemtype="http://schema.org/ImageGallery">
 				<meta itemprop="about" content="<?php echo esc_attr( get_the_title() ); ?> Photos" />
+				<ul class="malinky-gallery-slider">
 		<?php }
 
 				if ( malinky_is_computer() ) {
