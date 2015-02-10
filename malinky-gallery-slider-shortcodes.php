@@ -52,6 +52,11 @@ function malinky_gallery_slider( $atts )
 	$atts['images_modulus'] = $atts['images_per_slide'] != 1 ? 1 : 0;
 	
 	/**
+	 * Get the taxonomy term and then use the description to create a scheme.org to describe the gallery.
+	 */
+	$atts['taxonomy_term_description'] = get_term_by( 'slug', $atts['taxonomy_term'], $atts['taxonomy_name']);
+	
+	/**
 	 * Main WP_Query.
 	 */
 	$gallery_slider_wp_query = malinky_gallery_slider_wp_query( $atts['taxonomy_name'], $atts['taxonomy_term'], $atts['total_images'], $atts['orderby'] );
@@ -84,6 +89,7 @@ function malinky_gallery_slider( $atts )
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
 				<ul class="malinky-gallery-slider" itemscope itemtype="http://schema.org/ImageGallery">
+				<meta itemprop="about" content="<?php echo esc_attr( $atts['taxonomy_term_description']->description ); ?>" />
 		<?php }
 
 				if ( malinky_is_computer() ) { 
@@ -93,11 +99,11 @@ function malinky_gallery_slider( $atts )
 						<div class="col">
 					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-									<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
+									<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
 										<?php if ( $gallery_slider_wp_query->current_post < ( $atts['images_per_slide'] * 2 ) ) { ?>
-											<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="image" />
+											<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
 										<?php } else { ?>
-											<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="image" />
+											<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
 										<?php } ?>
 									</a>
 								</div>
@@ -112,11 +118,11 @@ function malinky_gallery_slider( $atts )
 
 					<li>
 						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-							<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
+							<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
 								<?php if ( $gallery_slider_wp_query->current_post < 2 ) { ?>
-									<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="image" />
+									<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
 								<?php } else { ?>
-									<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="image" />
+									<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
 								<?php } ?>
 							</a>
 						</div>
@@ -200,6 +206,7 @@ function malinky_post_slider( $atts )
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper">
 				<ul class="malinky-gallery-slider"  itemscope itemtype="http://schema.org/ImageGallery">
+				<meta itemprop="about" content="<?php echo esc_attr( get_the_title() ); ?> Photos" />
 		<?php }
 
 				if ( malinky_is_computer() ) {
@@ -209,11 +216,11 @@ function malinky_post_slider( $atts )
 						<div class="col">
 					<?php } ?><div class="col-item col-item-quarter col-item-half--small">
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
-									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
+									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
 										<?php if ( $current_image < ( $atts['images_per_slide'] * 2 ) ) { ?>
-											<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" />
+											<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 										<?php } else { ?>
-											<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" />
+											<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 										<?php } ?>
 									</a>
 								</div>
@@ -228,11 +235,11 @@ function malinky_post_slider( $atts )
 
 					<li>
 						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
-							<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
+							<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
 								<?php if ( $current_image < 2 ) { ?>
-									<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" />
+									<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 								<?php } else { ?>
-									<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" />
+									<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 								<?php } ?>
 							</a>
 						</div>
