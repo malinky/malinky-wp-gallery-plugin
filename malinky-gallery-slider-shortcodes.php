@@ -84,7 +84,7 @@ function malinky_gallery_slider( $atts )
 
 		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
 		<div class="col-item col-item-full col-item--margin-bottom-20">
-			<h3 class="grey-underline">Photos</h3>
+			<h3 class="green-underline">Photos</h3>
 			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper" itemscope itemtype="http://schema.org/ImageGallery">
