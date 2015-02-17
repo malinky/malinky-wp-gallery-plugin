@@ -326,22 +326,35 @@ jQuery(document).ready(function($){
                 nextText: '',
                 prevText: '',
                 adaptiveHeight: false,
-                onSliderLoad: function() {
+                onSliderLoad: function($slider,activeIndex) {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
                     clearTimeout(mgsLoadingTimer);
                     $('.malinky-gallery-slider-loading').hide();
+                    /*
+                     * Once slider is loaded then load next slide as only first is loaded initially.
+                     * This means images are there when next slide is loaded then onSlideBefore callback kicks in.
+                     */
+                    var imagesPerSlide = $slider.children.find('img').attr('data-imageps').slice(0,1);
+                    var $lazyNextImg = $slider.children.find('.lazy').slice(0,imagesPerSlide);
+                    $.each($lazyNextImg, function( index, value ) {
+                        var loadImg = $(value).attr('data-src');
+                        $(value).attr('src', loadImg);
+                        $(value).removeClass('lazy');
+                    });
+
                 },
                 onSlideBefore: function($slideElement, oldIndex, newIndex) {
                     /*
-                     * Find next two images in whole slider object.
-                     * Then loop through swapping out the data-src into the actual src ready of next slide.
-                     * Loads two at once on mobile so the next is partially visible.
+                     * Find number of images per slide.
+                     * Get that number of images with class lazy.
+                     * Then loop through swapping out the data-src into the actual src ready for next slide.
+                     * Loads the next slides worth of images.
                      */
-                    var imagesPerSlide = slider.find('img').attr('data-imageps').slice(0,1);   
+                    var imagesPerSlide = slider.find('img').attr('data-imageps').slice(0,1);
                     var $lazyNextImg = slider.find('.lazy').slice(0,imagesPerSlide);
                     $.each($lazyNextImg, function( index, value ) {
-                        var loadimg = $(value).attr('data-src');
-                        $(value).attr('src', loadimg);
+                        var loadImg = $(value).attr('data-src');
+                        $(value).attr('src', loadImg);
                         $(value).removeClass('lazy');
                     });
                 }
@@ -371,14 +384,14 @@ jQuery(document).ready(function($){
                 },
                 onSlideBefore: function($slideElement, oldIndex, newIndex) {
                     /*
-                     * Find next two images in whole slider object.
-                     * Then loop through swapping out the data-src into the actual src ready of next slide.
+                     * Find next image in whole slider object.
+                     * Then swap out the data-src into the actual src ready of next slide.
                      * Loads the next image on mobile so the next is partially visible.
                      */
                     var $lazyNextImg = malinky_gallery_slider_mobile_slider.find('.lazy').slice(0,1);
                     $.each($lazyNextImg, function(index, value) {
-                        var loadimg = $(value).attr('data-src');
-                        $(value).attr('src', loadimg);
+                        var loadImg = $(value).attr('data-src');
+                        $(value).attr('src', loadImg);
                         $(value).removeClass('lazy');
                     });
                 }

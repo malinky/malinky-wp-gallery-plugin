@@ -42,7 +42,7 @@
 
 .bx-wrapper {
     position: relative;
-    margin: 0 auto 60px;
+    margin: 0 auto 0 auto;
     padding: 0;
     *zoom: 1;
 }
@@ -70,6 +70,7 @@
     font-size: 1.8em;
     font-weight: bold;
     text-align: center;
+    transition: all 0.25s ease-in-out;
 }
 
 .bx-wrapper .bx-next {
