@@ -188,6 +188,8 @@ function malinky_post_slider( $atts )
 	 */
 	$image_meta = get_field( 'post_gallery' );
 
+	if ( ! $image_meta ) $image_meta = get_sub_field( 'post_gallery' );
+
 	if ( ! $image_meta ) return;
 
 	$total_images = count( $image_meta );
@@ -201,7 +203,10 @@ function malinky_post_slider( $atts )
 
 		if ( $current_image == 0 ) { ?>
 		<div class="col-item col-item-full">
-			<h3>Photos</h3>
+			<?php
+			if ( ! get_sub_field( 'post_gallery' ) ) { ?>
+				<h3>Photos</h3>
+			<?php } ?>
 			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper" itemscope itemtype="http://schema.org/ImageGallery">
