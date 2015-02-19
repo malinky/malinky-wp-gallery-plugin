@@ -92,7 +92,7 @@ function malinky_gallery_slider( $atts )
 				<ul class="malinky-gallery-slider">
 		<?php }
 
-				if ( malinky_is_computer() ) { 
+				if ( malinky_is_tablet_computer() ) { 
 				
 					if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
@@ -114,7 +114,7 @@ function malinky_gallery_slider( $atts )
 
 				}
 
-				if ( malinky_is_phone_tablet() ) { ?>
+				if ( malinky_is_phone() ) { ?>
 
 					<li>
 						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
@@ -214,7 +214,7 @@ function malinky_post_slider( $atts )
 				<ul class="malinky-gallery-slider">
 		<?php }
 
-				if ( malinky_is_computer() ) {
+				if ( malinky_is_tablet_computer() ) {
 				
 					if ( ($current_image + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
@@ -236,7 +236,7 @@ function malinky_post_slider( $atts )
 
 				}
 
-				if ( malinky_is_phone_tablet() ) { ?>
+				if ( malinky_is_phone() ) { ?>
 
 					<li>
 						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">

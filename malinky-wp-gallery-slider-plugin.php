@@ -113,10 +113,10 @@ class Malinky_Gallery_Slider
 		);
 
 		//global $malinky_mobile_detect;
-		if ( malinky_is_phone_tablet() ) {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone_tablet'] = true;
+		if ( malinky_is_phone() ) {
+			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
 		} else {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone_tablet'] = false;
+			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
 		}
 
 		wp_localize_script( 'malinky-gallery-slider-main-js', 'malinky_gallery_slider_mobile_detect', $malinky_gallery_slider_mobile_detect );
