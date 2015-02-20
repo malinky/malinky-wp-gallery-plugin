@@ -77,10 +77,11 @@ function malinky_gallery_slider( $atts )
 		/*
 		 * Get image url, width and height array.
 		 */
-		$image_meta_thumbnail 	= wp_get_attachment_image_src( get_the_ID(), 'malinky_thumbnail' );
-		$image_meta_medium 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_medium' );
-		$image_meta_large 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_large' );
-		$image_meta_alt 		= ucwords( $atts['taxonomy_term'] ) . ' Images ' . ($gallery_slider_wp_query->current_post + 1);
+		$image_meta_mini_thumbnail 	= wp_get_attachment_image_src( get_the_ID(), 'malinky_mini_thumbnail' );
+		$image_meta_thumbnail 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_thumbnail' );
+		$image_meta_medium 			= wp_get_attachment_image_src( get_the_ID(), 'malinky_medium' );
+		$image_meta_large 			= wp_get_attachment_image_src( get_the_ID(), 'malinky_large' );
+		$image_meta_alt 			= ucwords( $atts['taxonomy_term'] ) . ' Images ' . ($gallery_slider_wp_query->current_post + 1);
 
 		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
 		<div class="col-item col-item-full col-item--margin-bottom-20">
@@ -101,9 +102,21 @@ function malinky_gallery_slider( $atts )
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
 									<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
 										<?php if ( $gallery_slider_wp_query->current_post < ( $atts['images_per_slide'] ) ) { ?>
-											<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+
+											<?php if ( malinky_is_tablet() ) { ?>
+												<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+											<?php } else { ?>
+												<img src="<?php echo esc_url( $image_meta_mini_thumbnail[0] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+											<?php } ?>
+
 										<?php } else { ?>
-											<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+
+											<?php if ( malinky_is_tablet() ) { ?>
+												<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+											<?php } else { ?>
+												<img data-src="<?php echo esc_url( $image_meta_mini_thumbnail[0] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
+											<?php } ?>
+
 										<?php } ?>
 									</a>
 								</div>
@@ -223,9 +236,21 @@ function malinky_post_slider( $atts )
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
 									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
 										<?php if ( $current_image < ( $atts['images_per_slide'] ) ) { ?>
-											<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+
+											<?php if ( malinky_is_tablet() ) { ?>
+												<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+											<?php } else { ?>
+												<img src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+											<?php } ?>
+
 										<?php } else { ?>
-											<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+
+											<?php if ( malinky_is_tablet() ) { ?>
+												<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+											<?php } else { ?>
+												<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['	images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+											<?php } ?>
+										
 										<?php } ?>
 									</a>
 								</div>
