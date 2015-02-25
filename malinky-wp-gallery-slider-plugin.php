@@ -2,11 +2,15 @@
 /**
  * Plugin Name: Malinky Gallery Slider Plugin
  * Plugin URI: https://github.com/malinky/malinky-wp-gallery-slider-plugin
- * Description: Display gallery slider using attachment custom post type and BX Slider
+ * Description: Display gallery slider using attachment custom post type and BX Slider.
  * Version: 1.0
  * Author: Malinky
  * Author URI: https://github.com/malinky
  * License: GPL2
+ *
+ * Dependencies: Photoswipe (installed in theme), Mobile Detect and ACF.
+ *
+ * @todo Look at implmentation of shortcode, limit <div col> etc to calling in template not in shortcode.
  */
 
 class Malinky_Gallery_Slider
@@ -109,10 +113,10 @@ class Malinky_Gallery_Slider
 		);
 
 		//global $malinky_mobile_detect;
-		if ( malinky_is_phone_tablet() ) {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone_tablet'] = true;
+		if ( malinky_is_phone() ) {
+			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
 		} else {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone_tablet'] = false;
+			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
 		}
 
 		wp_localize_script( 'malinky-gallery-slider-main-js', 'malinky_gallery_slider_mobile_detect', $malinky_gallery_slider_mobile_detect );

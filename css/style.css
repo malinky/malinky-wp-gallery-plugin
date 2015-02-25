@@ -1,6 +1,48 @@
+.malinky-gallery-slider {
+    margin: 0;
+    list-style: none;
+}
+
+.malinky-gallery-slider-wrapper {
+    visibility: hidden;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* IE 8 */
+    opacity: 0;
+    height: 0;
+    -webkit-transition: opacity 0.4s ease-in; /* Android < 4.4, Chrome < 25, iOS < 7.1, Safari < 6.1 */
+     transition:        opacity 0.4s ease-in; /* Android, Chrome > 25, Firefox > 15, iOS > 6.1, IE > 9, Opera, Opera Mobile, Safari > 6 */
+}
+
+.malinky-gallery-slider-wrapper-show {
+    visibility: visible;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; /* IE 8 */
+    opacity: 1;
+    height: auto;
+}
+
+.malinky-gallery-slider-loading {
+    display: none;
+    height: 100px;
+    background: url(../img/loader.gif) 50% no-repeat;
+    background-size: 50px;
+}
+
+.malinky-gallery-slider-image {
+    margin-bottom: 20px;
+}
+
+.malinky-gallery-slider-image a {
+    display: block;
+    -webkit-transition: box-shadow 0.1s ease-in-out; /* Android < 4.4, Chrome < 25, iOS < 7.1, Safari < 6.1 */
+     transition:        box-shadow 0.1s ease-in-out; /* Android, Chrome > 25, Firefox > 15, iOS > 6.1, IE > 9, Opera, Opera Mobile, Safari > 6 */
+}
+
+.malinky-gallery-slider-image a:hover {
+    box-shadow: 0 3px 4px -2px #1c8444;
+}
+
 .bx-wrapper {
     position: relative;
-    margin: 0 auto 60px;
+    margin: 0 auto 0 auto;
     padding: 0;
     *zoom: 1;
 }
@@ -28,6 +70,7 @@
     font-size: 1.8em;
     font-weight: bold;
     text-align: center;
+    transition: all 0.25s ease-in-out;
 }
 
 .bx-wrapper .bx-next {
@@ -71,65 +114,4 @@
 .bx-wrapper .bx-controls-direction a.bx-prev.disabled,
 .bx-wrapper .bx-controls-direction a.bx-next.disabled {
     background: #ececec;
-}
-
-.malinky-gallery-slider {
-    margin: 0;
-    list-style: none;
-}
-
-.malinky-gallery-slider-wrapper {
-    visibility: hidden;
-    opacity: 0;
-    height: 0;
-    transition: all 0.7s ease-in;
-}
-
-.malinky-gallery-slider-wrapper-show {
-    visibility: visible;
-    opacity: 1;
-    height: auto;
-}
-
-.malinky-gallery-slider-loading {
-    height: 100px;
-    background: url(../img/loader.gif) 50% no-repeat;
-    background-size: 50px;
-}
-
-/*
- * Used as div holder for all lightbox images.
- */
-.lightbox-link-holder {
-    position: relative;
-    display: block;
-    margin-bottom: 20px;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-/*
- * Create this empty div as last-child of .lightbox-link-holder.
- */
-.lightbox-hover {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #20944d url(../img/image_enlarge.png) 50% 70% no-repeat;
-    background-size: 40px;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
-    opacity: 0;
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.lightbox-hover:hover {
-    background-position: 50% 50%;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=90)";
-    /*ie 8 and no js fallback*/
-    filter: alpha(opacity=90);
-    /*ie 5-7 and no js fallback*/
-    opacity: 0.9;
 }
