@@ -56,18 +56,22 @@ class Malinky_Gallery_Slider
 	public function malinky_gallery_slider_styles()
 	{
 
-		/**
-		 * BX Slider Style.
-		 *
-		 * @link http://bxslider.com/
-		 */		
-		wp_register_style( 'malinky-gallery-slider-bxslider', 
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/css/style.css', 
-							false, 
-							NULL
-		);
-		wp_enqueue_style( 'malinky-gallery-slider-bxslider' );
+		//if ( WP_ENV != 'dev' && WP_ENV != 'prod' ) {
 
+			/**
+			 * BX Slider Style.
+			 *
+			 * @link http://bxslider.com/
+			 */		
+			wp_register_style( 'malinky-gallery-slider-bxslider', 
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/css/style.css', 
+								false, 
+								NULL
+			);
+			wp_enqueue_style( 'malinky-gallery-slider-bxslider' );
+
+		//}
+		
 	}
 
 
