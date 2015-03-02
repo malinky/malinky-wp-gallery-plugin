@@ -56,7 +56,7 @@ class Malinky_Gallery_Slider
 	public function malinky_gallery_slider_styles()
 	{
 
-		//if ( WP_ENV != 'dev' && WP_ENV != 'prod' ) {
+		if ( WP_ENV != 'dev' && WP_ENV != 'prod' ) {
 
 			/**
 			 * BX Slider Style.
@@ -70,7 +70,7 @@ class Malinky_Gallery_Slider
 			);
 			wp_enqueue_style( 'malinky-gallery-slider-bxslider' );
 
-		//}
+		}
 		
 	}
 
