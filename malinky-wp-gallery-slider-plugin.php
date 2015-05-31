@@ -2,15 +2,25 @@
 /**
  * Plugin Name: Malinky Gallery Slider Plugin
  * Plugin URI: https://github.com/malinky/malinky-wp-gallery-slider-plugin
- * Description: Display gallery slider using attachment custom post type and BX Slider.
- * Version: 1.0
+ * Description: Display gallery slider from an ACF gallery.
+ * Version: 1.1
  * Author: Malinky
  * Author URI: https://github.com/malinky
  * License: GPL2
  *
- * Dependencies: Photoswipe (installed in theme), Mobile Detect and ACF.
+ * Dependencies: Photoswipe, Mobile Detect, BX Slider and ACF.
+ * http://photoswipe.com/
+ * http://bxslider.com/
+ * http://www.advancedcustomfields.com/
+ * https://wordpress.org/plugins/wp-mobile-detect/
  *
- * @todo Look at implmentation of shortcode, limit <div col> etc to calling in template not in shortcode.
+ * Uses theme grid system.
+ * Requires an ACF field label of malinky_gallery as a standalone field or a repeater field.
+ * Also uses the following thumbnails as set in functions.php.
+ * add_image_size( 'malinky_mini_thumbnail', 300 );
+ * add_image_size( 'malinky_thumbnail', 600 );
+ * add_image_size( 'malinky_medium', 1024 );
+ * add_image_size( 'malinky_large', 1600 );
  */
 
 class Malinky_Gallery_Slider
@@ -26,7 +36,7 @@ class Malinky_Gallery_Slider
 
 
 	   	/* ------------------------------------------------------------------------ *
-	     * Call Methods - LOADED LAST TO ENSURE CSS CASCADES.
+	     * Enqueue styles and scripts
 	     * ------------------------------------------------------------------------ */
 	   	add_action( 'wp_enqueue_scripts', array( $this, 'malinky_gallery_slider_styles' ), 99 );
 	   	add_action( 'wp_enqueue_scripts', array( $this, 'malinky_gallery_slider_scripts' ), 99 );
@@ -36,19 +46,106 @@ class Malinky_Gallery_Slider
 	     * Includes
 	     * ------------------------------------------------------------------------ */
 		include( 'malinky-gallery-slider-shortcodes.php' );
-		include( 'malinky-gallery-slider-functions.php' );
+
+	}
 
 
-	   	/* ------------------------------------------------------------------------ *
-	     * Include Classes
-	     * ------------------------------------------------------------------------ */
-		include( 'class-malinky-gallery-slider-cpt.php' );
-			
+	public function malinky_gallery_slider_mobile_detect() {
 
-	   	/* ------------------------------------------------------------------------ *
-	     * Instantiate Classes
-	     * ------------------------------------------------------------------------ */
-		$malinky_gallery_slider_cpt = new Malinky_Gallery_Slider_CPT();
+		/**
+		 * Include server side device detection if not already.
+		 *
+		 * @link http://mobiledetect.net/
+		 * @link https://github.com/serbanghita/Mobile-Detect/
+		 */
+		if ( ! is_admin() ) {
+
+			if ( WP_ENV == 'local' ) {
+
+			    require_once(ABSPATH . '../malinky-includes/Mobile_Detect.php');
+
+			} elseif ( WP_ENV == 'dev' ) {
+
+			    require_once(ABSPATH . '../../../malinky-includes/Mobile_Detect.php');    
+
+			} else {
+
+			    require_once(ABSPATH . '../../malinky-includes/Mobile_Detect.php');
+
+			}
+
+			if ( ! array_key_exists( 'malinky_mobile_detect', $GLOBALS) ) {
+				global $malinky_mobile_detect;
+				$malinky_mobile_detect = new Mobile_Detect();
+			}
+
+			if ( ! function_exists( 'malinky_is_phone' ) ) {
+
+				function malinky_is_phone()
+				{
+					global $malinky_mobile_detect;
+					if ( $malinky_mobile_detect->isMobile() && ! $malinky_mobile_detect->isTablet() )
+						return true;
+				}
+
+ 			}
+
+			if ( ! function_exists( 'malinky_is_phone_tablet' ) ) {
+
+				function malinky_is_phone_tablet()
+				{
+					global $malinky_mobile_detect;
+					if ( $malinky_mobile_detect->isMobile() || $malinky_mobile_detect->isTablet() )
+						return true;
+				}	
+
+			}
+
+			if ( ! function_exists( 'malinky_is_phone_computer' ) ) {
+
+				function malinky_is_phone_computer()
+				{
+					global $malinky_mobile_detect;
+					if ( ! $malinky_mobile_detect->isTablet() )
+						return true;
+				}						
+
+			}
+
+			if ( ! function_exists( 'malinky_is_tablet' ) ) {
+
+				function malinky_is_tablet()
+				{
+					global $malinky_mobile_detect;
+					if ( $malinky_mobile_detect->isTablet() )
+						return true;
+				}
+
+			}
+
+			if ( ! function_exists( 'malinky_is_tablet_computer' ) ) {
+
+				function malinky_is_tablet_computer()
+				{
+					global $malinky_mobile_detect;
+					if ( $malinky_mobile_detect->isTablet() || ! $malinky_mobile_detect->isMobile() )
+						return true;
+				}	
+
+			}		
+
+			if ( ! function_exists( 'malinky_is_computer' ) ) {
+
+				function malinky_is_computer()
+				{
+					global $malinky_mobile_detect;
+					if ( ! $malinky_mobile_detect->isMobile() && ! $malinky_mobile_detect->isTablet() )
+						return true;
+				}	
+
+			}
+
+		}
 
 	}
 
@@ -56,6 +153,7 @@ class Malinky_Gallery_Slider
 	public function malinky_gallery_slider_styles()
 	{
 
+		//Plugin styles combined into theme styles.css during gulp build process.
 		if ( WP_ENV != 'dev' && WP_ENV != 'prod' ) {
 
 			/**
@@ -116,6 +214,34 @@ class Malinky_Gallery_Slider
 							true
 		);
 
+
+		/**
+		 * Photoswipe.
+		 *
+		 * @link http://photoswipe.com/
+		 */
+		wp_register_script( 'malinky-photoswipe-js',
+							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe.js',
+							false,
+							NULL,
+							true
+		);
+		wp_enqueue_script( 'malinky-photoswipe-js' );	
+
+
+		/**
+		 * Photoswipe UI.
+		 *
+		 * @link http://photoswipe.com/
+		 */
+		wp_register_script( 'malinky-photoswipe-ui-js',
+							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe-ui.js',
+							false,
+							NULL,
+							true
+		);
+		wp_enqueue_script( 'malinky-photoswipe-ui-js' );		
+
 		//global $malinky_mobile_detect;
 		if ( malinky_is_phone() ) {
 			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
@@ -123,7 +249,11 @@ class Malinky_Gallery_Slider
 			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
 		}
 
-		wp_localize_script( 'malinky-gallery-slider-main-js', 'malinky_gallery_slider_mobile_detect', $malinky_gallery_slider_mobile_detect );
+		//Pass malinky_gallery_slider_mobile_detect to malinky-gallery-slider-main-js script.
+		wp_localize_script( 'malinky-gallery-slider-main-js', 
+							'malinky_gallery_slider_mobile_detect', 
+							$malinky_gallery_slider_mobile_detect
+						);
 		wp_enqueue_script( 'malinky-gallery-slider-main-js' );
 
 	}
@@ -132,3 +262,4 @@ class Malinky_Gallery_Slider
 
 
 $malinky_gallery_slider = new Malinky_Gallery_Slider();
+$malinky_gallery_slider->malinky_gallery_slider_mobile_detect();
