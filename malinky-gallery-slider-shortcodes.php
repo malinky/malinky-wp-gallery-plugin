@@ -15,6 +15,7 @@ add_shortcode( 'malinky-slider', 'malinky_gallery' );
  *
  * [malinky-slider 
  * images_per_slide = Number of images per slide (default 8).
+ * field_label 		= The acf field label (default malinky_gallery).
  * ]
  */
 function malinky_gallery( $atts )
@@ -22,10 +23,11 @@ function malinky_gallery( $atts )
 
 	$atts = shortcode_atts(
 		array(
-	        'images_per_slide' 	=> 8
+	        'images_per_slide' 	=> 8,
+	        'field_label' 		=> 'malinky_gallery'
     	),
 		$atts,
-		'malinky-post-slider'
+		'malinky-slider'
 	);
 
 	/**
@@ -41,9 +43,9 @@ function malinky_gallery( $atts )
 	/**
 	 * Main gallery query using ACF.
 	 */
-	$image_meta = get_field( 'malinky_gallery' );
+	$image_meta = get_field( $atts['field_label'] );
 
-	if ( ! $image_meta ) $image_meta = get_sub_field( 'malinky_gallery' );
+	if ( ! $image_meta ) $image_meta = get_sub_field( $atts['field_label'] );
 
 	if ( ! $image_meta ) return;
 
