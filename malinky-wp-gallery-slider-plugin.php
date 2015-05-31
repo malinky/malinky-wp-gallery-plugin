@@ -176,86 +176,128 @@ class Malinky_Gallery_Slider
 	public function malinky_gallery_slider_scripts()
 	{
 
-		/**
-		 * Imagesloaded.
-		 *
-		 * @link https://github.com/desandro/imagesloaded
-		 */
-		wp_register_script( 'malinky-gallery-slider-imagesloaded-js', 
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/imagesloaded.js', 
-							array( 'jquery' ), 
-							NULL, 
-							true
-		);
-		wp_enqueue_script( 'malinky-gallery-slider-imagesloaded-js' );
+		if ( WP_ENV == 'local' ) {
+
+		/* -------------------------------- *
+		 * Local
+		 * -------------------------------- */
+
+			/**
+			 * Imagesloaded.
+			 *
+			 * @link https://github.com/desandro/imagesloaded
+			 */
+			wp_register_script( 'malinky-gallery-slider-imagesloaded-js', 
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/imagesloaded.js', 
+								array( 'jquery' ), 
+								NULL, 
+								true
+			);
+			wp_enqueue_script( 'malinky-gallery-slider-imagesloaded-js' );
 
 
-		/**
-		 * BX Slider.
-		 *
-		 * @link http://bxslider.com/
-		 */
-		wp_register_script( 'malinky-gallery-slider-bxslider-js', 
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/jquery.bxslider.js', 
-							array( 'jquery' ), 
-							NULL, 
-							true
-		);
-		wp_enqueue_script( 'malinky-gallery-slider-bxslider-js' );
+			/**
+			 * BX Slider.
+			 *
+			 * @link http://bxslider.com/
+			 */
+			wp_register_script( 'malinky-gallery-slider-bxslider-js', 
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/jquery.bxslider.js', 
+								array( 'jquery' ), 
+								NULL, 
+								true
+			);
+			wp_enqueue_script( 'malinky-gallery-slider-bxslider-js' );
 
 
-		/*
-		 * Inititate Imagesloaded and BX Slider.
-		 */
-		wp_register_script( 'malinky-gallery-slider-main-js', 
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/main.js', 
-							array( 'jquery' ), 
-							NULL, 
-							true
-		);
+			/*
+			 * Inititate Imagesloaded and BX Slider.
+			 */
+			wp_register_script( 'malinky-gallery-slider-main-js', 
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/main.js', 
+								array( 'jquery' ), 
+								NULL, 
+								true
+			);
 
 
-		/**
-		 * Photoswipe.
-		 *
-		 * @link http://photoswipe.com/
-		 */
-		wp_register_script( 'malinky-photoswipe-js',
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe.js',
-							false,
-							NULL,
-							true
-		);
-		wp_enqueue_script( 'malinky-photoswipe-js' );	
+			/**
+			 * Photoswipe.
+			 *
+			 * @link http://photoswipe.com/
+			 */
+			wp_register_script( 'malinky-gallery-slider-photoswipe-js',
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe.js',
+								false,
+								NULL,
+								true
+			);
+			wp_enqueue_script( 'malinky-gallery-slider-photoswipe-js' );	
 
 
-		/**
-		 * Photoswipe UI.
-		 *
-		 * @link http://photoswipe.com/
-		 */
-		wp_register_script( 'malinky-photoswipe-ui-js',
-							MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe-ui.js',
-							false,
-							NULL,
-							true
-		);
-		wp_enqueue_script( 'malinky-photoswipe-ui-js' );		
+			/**
+			 * Photoswipe UI.
+			 *
+			 * @link http://photoswipe.com/
+			 */
+			wp_register_script( 'malinky-gallery-slider-photoswipe-ui-js',
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/photoswipe-ui.js',
+								false,
+								NULL,
+								true
+			);
+			wp_enqueue_script( 'malinky-gallery-slider-photoswipe-ui-js' );		
 
-		//global $malinky_mobile_detect;
-		if ( malinky_is_phone() ) {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
-		} else {
-			$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
+			//global $malinky_mobile_detect;
+			if ( malinky_is_phone() ) {
+				$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
+			} else {
+				$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
+			}
+
+			//Pass malinky_gallery_slider_mobile_detect to malinky-gallery-slider-main-js script.
+			wp_localize_script( 'malinky-gallery-slider-main-js', 
+								'malinky_gallery_slider_mobile_detect', 
+								$malinky_gallery_slider_mobile_detect
+							);
+			wp_enqueue_script( 'malinky-gallery-slider-main-js' );
+
 		}
 
-		//Pass malinky_gallery_slider_mobile_detect to malinky-gallery-slider-main-js script.
-		wp_localize_script( 'malinky-gallery-slider-main-js', 
-							'malinky_gallery_slider_mobile_detect', 
-							$malinky_gallery_slider_mobile_detect
-						);
-		wp_enqueue_script( 'malinky-gallery-slider-main-js' );
+		
+		if ( WP_ENV == 'dev' || WP_ENV == 'prod' ) {
 
+			/* -------------------------------- *
+			 * Dev && Prod
+			 * -------------------------------- */
+
+			/*
+			 * imagesloaded.js, jquery.bxslider.js, main.js, photoswipe.js, photoswipe-ui.js
+			 */
+			wp_register_script( 'malinky-gallery-slider-scripts-min-js',
+								MALINKY_GALLERY_SLIDER_PLUGIN_URL . '/js/scripts.min.js',
+								array( 'jquery' ),
+								NULL,
+								true
+			);
+
+			//global $malinky_mobile_detect;
+			if ( malinky_is_phone() ) {
+				$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = true;
+			} else {
+				$malinky_gallery_slider_mobile_detect['malinky_is_phone'] = false;
+			}
+
+			//Pass malinky_gallery_slider_mobile_detect to malinky-scripts-min-js script.
+			wp_localize_script( 'malinky-gallery-slider-scripts-min-js', 
+								'malinky_gallery_slider_mobile_detect', 
+								$malinky_gallery_slider_mobile_detect
+							);
+
+			wp_enqueue_script( 'malinky-gallery-slider-scripts-min-js' );
+
+		}
+		
 	}
 
 }
