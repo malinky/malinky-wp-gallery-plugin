@@ -16,6 +16,7 @@ add_shortcode( 'malinky-slider', 'malinky_gallery' );
  * [malinky-slider 
  * images_per_slide = Number of images per slide (default 8).
  * field_label 		= The acf field label (default malinky_gallery).
+ * col_item 		= The layout of the images on desktop. (default col-item col-item-quarter col-item-half--small). 
  * ]
  */
 function malinky_gallery( $atts )
@@ -24,7 +25,8 @@ function malinky_gallery( $atts )
 	$atts = shortcode_atts(
 		array(
 	        'images_per_slide' 	=> 8,
-	        'field_label' 		=> 'malinky_gallery'
+	        'field_label' 		=> 'malinky_gallery',
+	        'col_item'	 		=> 'col-item col-item-quarter col-item-half--small',
     	),
 		$atts,
 		'malinky-slider'
@@ -77,7 +79,7 @@ function malinky_gallery( $atts )
 					if ( ($current_image + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
 						<div class="col">
-					<?php } ?><div class="col-item col-item-quarter col-item-half--small">
+					<?php } ?><div class="<?php echo esc_attr( $atts['col_item'] ); ?> ">
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
 									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
 										<?php
