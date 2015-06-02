@@ -325,8 +325,10 @@ jQuery(document).ready(function($){
      */
     $('.malinky-gallery-slider').imagesLoaded(function(instance) {
 
+        //If not mobile.
         if (!malinky_gallery_slider_mobile_detect.malinky_is_phone) {
             
+            //Slider set up.
             slider = $('.malinky-gallery-slider').bxSlider({
                 pager: false,
                 slideMargin: 24,
@@ -371,11 +373,13 @@ jQuery(document).ready(function($){
                 }
             });
 
+        //Mobile.
         } else {
             
-            malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 100;
-
-            malinky_gallery_slider_mobile_slider = $('.malinky-gallery-slider').bxSlider({
+            /*
+             * Slider set up object for both initial and resized.
+             */
+            var malinkySliderSetup = {
                 pager: false,
                 slideMargin: 10,
                 infiniteLoop: false,
@@ -384,12 +388,12 @@ jQuery(document).ready(function($){
                 controls: true,
                 nextText: '',
                 prevText: '',
-                adaptiveHeight: false,
+                adaptiveHeight: true,
                 onSliderLoad: function() {
                     $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                    clearTimeout(mgsLoadingTimer);
+                    clearTimeout(mgsLoadingTimer);                        
                     $('.malinky-gallery-slider-loading').hide();
-                    $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
+                    $('.malinky-gallery-slider li').css('width', malinkySliderSlideWidth());
                     $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
                     $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
                 },
@@ -399,50 +403,58 @@ jQuery(document).ready(function($){
                      * Then swap out the data-src into the actual src ready of next slide.
                      * Loads the next image on mobile so the next is partially visible.
                      */
-                    var $lazyNextImg = malinky_gallery_slider_mobile_slider.find('.lazy').slice(0,1);
+                    var $lazyNextImg = mobileSlider.find('.lazy').slice(0,1);
                     $.each($lazyNextImg, function(index, value) {
                         var loadImg = $(value).attr('data-src');
                         $(value).attr('src', loadImg);
                         $(value).removeClass('lazy');
                     });
                 }
-            });
+            }
+
+            
+            /*
+             * Set up the slide width.
+             * Uses the original image width and compares against the width of the containing li.
+             * This generally determines image width between portrait and landscapes and cases where
+             * the original image is not as wide as the containing li.
+             */
+            function malinkySliderSlideWidth () {
+                var originalImageWidth = document.querySelector('.malinky-gallery-slider li img').naturalWidth;
+                if (originalImageWidth + 100 < $('.malinky-gallery-slider li').width()) {
+                    //Generally in landscape.
+                    slideWidth = originalImageWidth;
+                } else {
+                    //Generally in portrait.
+                    slideWidth = $('.malinky-gallery-slider li').width() - 100;
+                }
+                return slideWidth;
+            }
+            
+
+            //Set global malinkySliderCurrentWidth.
+            var malinkySliderCurrentWidth = $(window).width();
+
+            
+            /**
+             * After a resize which is an orientation switch reload BX Slider so new thumbnail sizes are generated.
+             */
+            var malinkySliderResize = debounce(function() {
+                if (malinkySliderCurrentWidth != $(window).width()) {
+                    $('.malinky-gallery-slider-wrapper').removeClass('malinky-gallery-slider-wrapper-show');
+                    $('.malinky-gallery-slider-loading').show();
+                    mobileSlider.reloadSlider(malinkySliderSetup);
+                    //Resave new width into global malinkySliderCurrentWidth
+                    malinkySliderCurrentWidth = $(window).width();
+                }
+            }, 250);
+
 
             /*
-             * Set resizeTimer to empty so it resets on page load.
+             * On resize, run the function expression mgsResize.
+             * resize event is namespaced with mgs.
              */
-            var resizeTimer;
-
-            /**
-             * After a resize, orientation switch reload BX Slider so new thumbnail sizes are generated.
-             */
-            function resizeFunction() {
-
-                $('.malinky-gallery-slider-wrapper').removeClass('malinky-gallery-slider-wrapper-show');
-                $('.malinky-gallery-slider-loading').show();
-
-                malinky_gallery_slider_slide_width = $('.malinky-gallery-slider li').width() - 100;
-
-                malinky_gallery_slider_mobile_slider.reloadSlider({
-                    pager: false,
-                    slideMargin: 10,
-                    infiniteLoop: false,
-                    easing: 'linear',
-                    hideControlOnEnd: true,
-                    controls: true,
-                    nextText: '',
-                    prevText: '',
-                    adaptiveHeight: true,
-                    onSliderLoad: function() {
-                        $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                        clearTimeout(mgsLoadingTimer);                        
-                        $('.malinky-gallery-slider-loading').hide();
-                        $('.malinky-gallery-slider li').css('width', malinky_gallery_slider_slide_width);
-                        $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
-                        $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
-                    }
-                });
-            };
+            $(window).bind('resize.mgs', malinkySliderResize)
 
 
             /**
@@ -467,23 +479,11 @@ jQuery(document).ready(function($){
             };
 
 
-            //Set global mgsCurrentWidth.
-            var mgsCurrentWidth = $(window).width();
-
-            var mgsResize = debounce(function() {
-                if (mgsCurrentWidth != $(window).width()) {
-                    resizeFunction();
-                    //Resave new width into global mgsCurrentWidth
-                    mgsCurrentWidth = $(window).width();
-                }
-            }, 250);
-
-
             /*
-             * On resize, run the function expression mgsResize.
+             * Launch mobile slider.
              */
-            $(window).bind('resize.mgs', mgsResize)
-            
+            var mobileSlider = $('.malinky-gallery-slider').bxSlider(malinkySliderSetup);
+
         }
 
     });

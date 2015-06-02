@@ -1,44 +1,32 @@
 <?php
 
-add_shortcode( 'malinky-gallery-slider', 'malinky_gallery_slider' );
+add_shortcode( 'malinky-gallery', 'malinky_gallery' );
 
 /**
-* Output the gallery and thumbnails
-*
-* @param 	str  		$taxonomy_name 		Name of the taxonomy to fetch images from.
-* @param 	str  		$taxonomy_term 		Taxonomy term slug.
-* @param 	str  		$images_per_slide	Number of images to display per slide.
-* @param 	str  		$total_images 		Total number of images to display.
-* @param 	str			$orderby 			Order of images.
-* @return 	str
+* Output a gallery and thumbnails added to a post or page with an ACF gallery field.
+* Shortcode should be used in a template. Generally set with flexible content field.
 */
 
 /**
  * Shortcode Usage
  *
- * [malinky-gallery-slider 
- * taxonomy_name 	= malinky_gallery_slider_sports (default).
- * taxonomy_term 	= A taxonomy term likes bowls (default).
- * images_per_slide = Number of images per slide (default 8).
- * total_images 	= Any number (default -1) which displays all.
- * orderby 			= WP_Query orberby (default date) otherwise rand is useful.
+ * [malinky-gallery 
+ * malinky_images_per_slide = Number of images per slide (default 4).
+ * malinky_field_label 		= The acf field label (default malinky_gallery).
+ * malinky_col_item 		= The layout of the images on desktop. (default col-item col-item-quarter col-item-half--small). 
  * ]
  */
-function malinky_gallery_slider( $atts )
+function malinky_gallery( $atts )
 {
-
-	global $gallery_slider_wp_query;
 
 	$atts = shortcode_atts(
 		array(
-	        'taxonomy_name' 	=> 'malinky_gallery_slider_sports',
-	        'taxonomy_term' 	=> 'bowls',
-	        'images_per_slide' 	=> 8,
-	        'total_images' 		=> -1,
-	        'orderby' 			=> 'date'
+	        'malinky_images_per_slide' 	=> 4,
+	        'malinky_field_label' 		=> 'malinky_gallery',
+	        'malinky_col_item'	 	=> 'col-item col-item-half--small col-item-quarter--medium col-item-quarter--large col-item-quarter--xlarge',
     	),
 		$atts,
-		'malinky-gallery-slider'
+		'malinky-slider'
 	);
 
 	/**
@@ -47,161 +35,16 @@ function malinky_gallery_slider( $atts )
 	 * If it is 0 set to default so shortcode still works.
 	 * Fix for the modulus calcuation below if image_per_slide is 1.
 	 */
-	$atts['images_per_slide'] = absint( $atts['images_per_slide'] );
-	$atts['images_per_slide'] = $atts['images_per_slide'] != 0 ? $atts['images_per_slide'] : 8;
-	$atts['images_modulus'] = $atts['images_per_slide'] != 1 ? 1 : 0;
-	
-	/**
-	 * Get the taxonomy term and then use the description to create a scheme.org to describe the gallery.
-	 */
-	$atts['taxonomy_term_description'] = get_term_by( 'slug', $atts['taxonomy_term'], $atts['taxonomy_name']);
-	
-	/**
-	 * Main WP_Query.
-	 */
-	$gallery_slider_wp_query = malinky_gallery_slider_wp_query( $atts['taxonomy_name'], $atts['taxonomy_term'], $atts['total_images'], $atts['orderby'] );
-
-	/**
-	 * If total_images is not set then use WP_Query post_count property otherwise use total_images.
-	 */
-	$gallery_slider_post_count = $atts['total_images'] == -1 ? $gallery_slider_wp_query->post_count : $atts['total_images'];
-
-	/**
-	 * It's possible total_images in the shortcode has been set to more images than exist. Therefore check if $gallery_slider_post_count set above
-	 * is greater than the total number of found posts, if so then use found posts to avoid any errors.
-	 */
-	$gallery_slider_post_count = $gallery_slider_post_count > $gallery_slider_wp_query->found_posts ? $gallery_slider_wp_query->found_posts : $gallery_slider_post_count;
-
-	while ( $gallery_slider_wp_query->have_posts() ) : $gallery_slider_wp_query->the_post();
-	
-		/*
-		 * Get image url, width and height array.
-		 */
-		$image_meta_mini_thumbnail 	= wp_get_attachment_image_src( get_the_ID(), 'malinky_mini_thumbnail' );
-		$image_meta_thumbnail 		= wp_get_attachment_image_src( get_the_ID(), 'malinky_thumbnail' );
-		$image_meta_medium 			= wp_get_attachment_image_src( get_the_ID(), 'malinky_medium' );
-		$image_meta_large 			= wp_get_attachment_image_src( get_the_ID(), 'malinky_large' );
-		$image_meta_alt 			= ucwords( $atts['taxonomy_term'] ) . ' Images ' . ($gallery_slider_wp_query->current_post + 1);
-
-		if ( $gallery_slider_wp_query->current_post == 0 ) { ?>
-		<div class="col-item col-item-full col-item--margin-bottom-20">
-			<h3 class="green-underline">Photos</h3>
-			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
-			<div class="malinky-gallery-slider-loading"></div>
-			<div class="malinky-gallery-slider-wrapper">
-				<meta itemprop="about" content="<?php echo esc_attr( $atts['taxonomy_term_description']->description ); ?>" />
-				<ul class="malinky-gallery-slider">
-		<?php }
-
-				if ( malinky_is_tablet_computer() ) { 
-				
-					if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
-					<li>
-						<div class="col">
-					<?php } ?><div class="col-item col-item-half col-item-quarter--medium col-item-half--small">
-								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-									<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
-										<?php if ( $gallery_slider_wp_query->current_post < ( $atts['images_per_slide'] ) ) { ?>
-
-											<?php if ( malinky_is_tablet() ) { ?>
-												<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>?v=01032015" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-											<?php } else { ?>
-												<img src="<?php echo esc_url( $image_meta_mini_thumbnail[0] ); ?>?v=01032015" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-											<?php } ?>
-
-										<?php } else { ?>
-
-											<?php if ( malinky_is_tablet() ) { ?>
-												<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>?v=01032015" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-											<?php } else { ?>
-												<img data-src="<?php echo esc_url( $image_meta_mini_thumbnail[0] ); ?>?v=01032015" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-											<?php } ?>
-
-										<?php } ?>
-									</a>
-								</div>
-							</div><?php if ( ($gallery_slider_wp_query->current_post + 1) % $atts['images_per_slide'] == 0 ) { ?>
-						</div><!-- .col nested -->
-					</li>
-					<?php }
-
-				}
-
-				if ( malinky_is_phone() ) { ?>
-
-					<li>
-						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $gallery_slider_wp_query->current_post; ?>">
-							<a href="<?php echo esc_url( $image_meta_large[0] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image_meta_large[1] ); ?>x<?php echo esc_attr( $image_meta_large[2] ); ?>" data-image-medium="<?php echo esc_url( $image_meta_medium[0] ); ?>" data-image-size-medium="<?php echo esc_attr( $image_meta_medium[1] ); ?>x<?php echo esc_attr( $image_meta_medium[2] ); ?>">
-								<?php if ( $gallery_slider_wp_query->current_post < 2 ) { ?>
-									<img src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>?v=01032015" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-								<?php } else { ?>
-									<img data-src="<?php echo esc_url( $image_meta_thumbnail[0] ); ?>?v=01032015" class="lazy" alt="<?php echo esc_attr( $image_meta_alt ); ?>" itemprop="thumbnail" />
-								<?php } ?>
-							</a>
-						</div>
-					</li>
-
-				<?php }
-
-		if ( ($gallery_slider_wp_query->current_post + 1) == $gallery_slider_post_count ) { ?>				
-				</ul>
-			</div>
-		</div>
-		<?php }
-
-	endwhile;
-
-	/**
-	 * Reset postdata back to original page.
-	 */
-	wp_reset_postdata();
-
-}
-
-
-add_shortcode( 'malinky-post-slider', 'malinky_post_slider' );
-
-/**
-* Output the a gallery and thumbnails added to a post with ACF.
-*
-* @param 	str  		$images_per_slide	Number of images to display per slide.
-* @return 	str
-*/
-
-/**
- * Shortcode Usage
- *
- * [malinky-post-slider 
- * images_per_slide = Number of images per slide (default 8).
- * ]
- */
-function malinky_post_slider( $atts )
-{
-
-	$atts = shortcode_atts(
-		array(
-	        'images_per_slide' 	=> 8
-    	),
-		$atts,
-		'malinky-post-slider'
-	);
-
-	/**
-	 * Fix for -ve image_per_slide.
-	 * Will also set image_per_slide to 0 if not an integer.
-	 * If it is 0 set to default so shortcode still works.
-	 * Fix for the modulus calcuation below if image_per_slide is 1.
-	 */
-	$atts['images_per_slide'] 	= absint( $atts['images_per_slide'] );
-	$atts['images_per_slide'] 	= $atts['images_per_slide'] != 0 ? $atts['images_per_slide'] : 8;
-	$atts['images_modulus'] 	= $atts['images_per_slide'] != 1 ? 1 : 0;
+	$atts['malinky_images_per_slide'] 	= absint( $atts['malinky_images_per_slide'] );
+	$atts['malinky_images_per_slide'] 	= $atts['malinky_images_per_slide'] != 0 ? $atts['malinky_images_per_slide'] : 4;
+	$atts['images_modulus'] 			= $atts['malinky_images_per_slide'] != 1 ? 1 : 0;
 
 	/**
 	 * Main gallery query using ACF.
 	 */
-	$image_meta = get_field( 'post_gallery' );
+	$image_meta = get_field( $atts['malinky_field_label'] );
 
-	if ( ! $image_meta ) $image_meta = get_sub_field( 'post_gallery' );
+	if ( ! $image_meta ) $image_meta = get_sub_field( $atts['malinky_field_label'] );
 
 	if ( ! $image_meta ) return;
 
@@ -217,7 +60,8 @@ function malinky_post_slider( $atts )
 		if ( $current_image == 0 ) { ?>
 		<div class="col-item col-item-full">
 			<?php
-			if ( ! get_sub_field( 'post_gallery' ) ) { ?>
+			//Generally if not used as a flexible content block. For example an ACF field called malinky_gallery in a posttype post.
+			if ( ! get_sub_field( 'malinky_gallery' ) ) { ?>
 				<h3>Photos</h3>
 			<?php } ?>
 			<noscript><p class="box error-permanent">Please turn JavaScript on in your browser to view all photos.</p></noscript>
@@ -229,32 +73,35 @@ function malinky_post_slider( $atts )
 
 				if ( malinky_is_tablet_computer() ) {
 				
-					if ( ($current_image + 1) % $atts['images_per_slide'] == $atts['images_modulus'] ) { ?>
+					if ( ($current_image + 1) % $atts['malinky_images_per_slide'] == $atts['images_modulus'] ) { ?>
 					<li>
 						<div class="col">
-					<?php } ?><div class="col-item col-item-quarter col-item-half--small">
+					<?php } ?><div class="<?php echo esc_attr( $atts['malinky_col_item'] ); ?> ">
 								<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
 									<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
-										<?php if ( $current_image < ( $atts['images_per_slide'] ) ) { ?>
+										<?php
+										//Images displayed on first load.
+										if ( $current_image < ( $atts['malinky_images_per_slide'] ) ) { ?>
 
 											<?php if ( malinky_is_tablet() ) { ?>
-												<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>?v=01032015" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+												<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } else { ?>
-												<img src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>?v=01032015" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+												<img src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" data-imageps="<?php echo esc_attr( $atts['malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } ?>
 
-										<?php } else { ?>
+										<?php } else {
+										//Images to be lazy loaded. ?>
 
 											<?php if ( malinky_is_tablet() ) { ?>
-												<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>?v=01032015" class="lazy" data-imageps="<?php echo esc_attr( $atts['images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+												<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } else { ?>
-												<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>?v=01032015" class="lazy" data-imageps="<?php echo esc_attr( $atts['	images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+												<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['	malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } ?>
 										
 										<?php } ?>
 									</a>
 								</div>
-							</div><?php if ( ($current_image + 1) % $atts['images_per_slide'] == 0 ) { ?>
+							</div><?php if ( ($current_image + 1) % $atts['malinky_images_per_slide'] == 0 ) { ?>
 						</div><!-- .col nested -->
 					</li>
 					<?php }
@@ -266,10 +113,13 @@ function malinky_post_slider( $atts )
 					<li>
 						<div class="malinky-gallery-slider-image" itemscope itemtype="http://schema.org/ImageObject" data-image-index="<?php echo $current_image; ?>">
 							<a href="<?php echo esc_url( $image['sizes']['malinky_large'] ); ?>" itemprop="contentUrl image" data-image-size-large="<?php echo esc_attr( $image['sizes']['malinky_large-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_large-height'] ); ?>" data-image-medium="<?php echo esc_url( $image['sizes']['malinky_medium'] ); ?>" data-image-size-medium="<?php echo esc_attr( $image['sizes']['malinky_medium-width'] ); ?>x<?php echo esc_attr( $image['sizes']['malinky_medium-height'] ); ?>">
-								<?php if ( $current_image < 2 ) { ?>
-									<img src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>?v=01032015" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
-								<?php } else { ?>
-									<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>?v=01032015" class="lazy" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+								<?php
+								//Images displayed on first load.
+								if ( $current_image < 2 ) { ?>
+									<img src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+								<?php } else {
+								//Images to be lazy loaded. ?>
+									<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" class="lazy" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 								<?php } ?>
 							</a>
 						</div>
