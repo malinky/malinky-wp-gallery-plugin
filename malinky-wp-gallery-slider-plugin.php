@@ -47,6 +47,9 @@ class Malinky_Gallery_Slider
 	     * ------------------------------------------------------------------------ */
 		include( 'malinky-gallery-slider-shortcodes.php' );
 
+		global $slider_count;
+		$slider_count = 1;
+
 	}
 
 

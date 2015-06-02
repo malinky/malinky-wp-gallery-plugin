@@ -301,10 +301,15 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
 
 };
 
+//Get all gallery sliders on the page.
+var malinkyGallerySliders = document.querySelectorAll('.malinky-gallery-slider');
+
 /*
- * Execute Photoswipe function.
+ * Execute Photoswipe function for each gallery slider.
  */
-initPhotoSwipeFromDOM('.malinky-gallery-slider');
+for (x = 0; x < malinkyGallerySliders.length; x++) {
+    initPhotoSwipeFromDOM('#' + malinkyGallerySliders[x].id);
+}
 
 
 /* ------------------------------------------------------------------------ *
@@ -313,12 +318,18 @@ initPhotoSwipeFromDOM('.malinky-gallery-slider');
 
 jQuery(document).ready(function($){
 
-    function mgsShowLoading()
+    /**
+     * Use a key parameter to determine the closest loading div to show.
+     */
+    function malinkyShowLoading(key)
     {
-        $('.malinky-gallery-slider-loading').show();
+        if (key) {
+            $('#' + (key -1)).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading').show();
+        } else {
+            $('.malinky-gallery-slider-loading').show();
+        }
     }
 
-    var mgsLoadingTimer = setTimeout(mgsShowLoading, 750);
 
     /**
      * Slider used generally on sport pages, projects and groundcare machinery
@@ -328,161 +339,193 @@ jQuery(document).ready(function($){
         //If not mobile.
         if (!malinky_gallery_slider_mobile_detect.malinky_is_phone) {
             
-            //Slider set up.
-            slider = $('.malinky-gallery-slider').bxSlider({
-                pager: false,
-                slideMargin: 24,
-                infiniteLoop: false,
-                easing: 'linear',
-                hideControlOnEnd: true,
-                controls: true,
-                nextText: '',
-                prevText: '',
-                adaptiveHeight: false,
-                onSliderLoad: function($slider,activeIndex) {
-                    $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                    clearTimeout(mgsLoadingTimer);
-                    $('.malinky-gallery-slider-loading').hide();
-                    /*
-                     * Once slider is loaded then load next slide as only first is loaded initially.
-                     * This means images are there when next slide is loaded then onSlideBefore callback kicks in.
-                     */
-                    var imagesPerSlide = $slider.children.find('img').attr('data-imageps').slice(0,1);
-                    var $lazyNextImg = $slider.children.find('.lazy').slice(0,imagesPerSlide);
-                    $.each($lazyNextImg, function( index, value ) {
-                        var loadImg = $(value).attr('data-src');
-                        $(value).attr('src', loadImg);
-                        $(value).removeClass('lazy');
-                    });
+            //Used to assign unique sliders to a slider array.
+            var slider = [];
+            var malinkyLoadingTimer = [];
 
-                },
-                onSlideBefore: function($slideElement, oldIndex, newIndex) {
-                    /*
-                     * Find number of images per slide.
-                     * Get that number of images with class lazy.
-                     * Then loop through swapping out the data-src into the actual src ready for next slide.
-                     * Loads the next slides worth of images.
-                     */
-                    var imagesPerSlide = slider.find('img').attr('data-imageps').slice(0,1);
-                    var $lazyNextImg = slider.find('.lazy').slice(0,imagesPerSlide);
-                    $.each($lazyNextImg, function( index, value ) {
-                        var loadImg = $(value).attr('data-src');
-                        $(value).attr('src', loadImg);
-                        $(value).removeClass('lazy');
-                    });
-                }
+            //Create bxslider for each gallery slider.
+            $.each(malinkyGallerySliders, function(key, value) {
+
+                $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
+                $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
+
+                malinkyLoadingTimer[key] = setTimeout(malinkyShowLoading(key), 750);
+
+                //Slider set up.
+                slider[key] = $('#' + value.id).bxSlider({
+                    pager: false,
+                    slideMargin: 24,
+                    infiniteLoop: false,
+                    easing: 'ease',
+                    speed: 200,
+                    hideControlOnEnd: true,
+                    controls: true,
+                    nextText: '',
+                    prevText: '',
+                    adaptiveHeight: false,
+                    onSliderLoad: function($slider,activeIndex) {
+                        $malinkyGallerySliderWrapper.addClass('malinky-gallery-slider-wrapper-show');
+                        clearTimeout(malinkyLoadingTimer[key]);
+                        $malinkyGallerySliderLoading.hide();
+                        /*
+                         * Once slider is loaded then load next slide as only first is loaded initially.
+                         * This means images are there when next slide is loaded then onSlideBefore callback kicks in.
+                         */
+                        var imagesPerSlide = $slider.children.find('img').attr('data-imageps').slice(0,1);
+                        var $lazyNextImg = $slider.children.find('.lazy').slice(0,imagesPerSlide);
+                        $.each($lazyNextImg, function( index, value ) {
+                            var loadImg = $(value).attr('data-src');
+                            $(value).attr('src', loadImg);
+                            $(value).removeClass('lazy');
+                        });
+
+
+
+                    },
+                    onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                        /*
+                         * Find number of images per slide.
+                         * Get that number of images with class lazy.
+                         * Then loop through swapping out the data-src into the actual src ready for next slide.
+                         * Loads the next slides worth of images.
+                         */
+                        var imagesPerSlide = slider[key].find('img').attr('data-imageps').slice(0,1);
+                        var $lazyNextImg = slider[key].find('.lazy').slice(0,imagesPerSlide);
+                        $.each($lazyNextImg, function( index, value ) {
+                            var loadImg = $(value).attr('data-src');
+                            $(value).attr('src', loadImg);
+                            $(value).removeClass('lazy');
+                        });
+                    }
+                });
+
             });
 
         //Mobile.
         } else {
             
-            /*
-             * Slider set up object for both initial and resized.
-             */
-            var malinkySliderSetup = {
-                pager: false,
-                slideMargin: 10,
-                infiniteLoop: false,
-                easing: 'linear',
-                hideControlOnEnd: true,
-                controls: true,
-                nextText: '',
-                prevText: '',
-                adaptiveHeight: true,
-                onSliderLoad: function() {
-                    $('.malinky-gallery-slider-wrapper').addClass('malinky-gallery-slider-wrapper-show');
-                    clearTimeout(mgsLoadingTimer);                        
-                    $('.malinky-gallery-slider-loading').hide();
-                    $('.malinky-gallery-slider li').css('width', malinkySliderSlideWidth());
-                    $('.malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
-                    $('.malinky-gallery-slider').parent().height($('.malinky-gallery-slider li').height());
-                },
-                onSlideBefore: function($slideElement, oldIndex, newIndex) {
-                    /*
-                     * Find next image in whole slider object.
-                     * Then swap out the data-src into the actual src ready of next slide.
-                     * Loads the next image on mobile so the next is partially visible.
-                     */
-                    var $lazyNextImg = mobileSlider.find('.lazy').slice(0,1);
-                    $.each($lazyNextImg, function(index, value) {
-                        var loadImg = $(value).attr('data-src');
-                        $(value).attr('src', loadImg);
-                        $(value).removeClass('lazy');
-                    });
+            //Used to assign unique sliders to a slider array.
+            var mobileSlider = [];
+            var mobileMalinkyLoadingTimer = [];
+
+            //Create bxslider for each gallery slider.
+            $.each(malinkyGallerySliders, function(key, value) {
+
+                $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
+                $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
+
+                mobileMalinkyLoadingTimer[key] = setTimeout(malinkyShowLoading(key), 750);
+
+                /*
+                 * Slider set up object for both initial and resized.
+                 */
+                var malinkySliderSetup = {
+                    pager: false,
+                    slideMargin: 10,
+                    infiniteLoop: false,
+                    easing: 'ease',
+                    speed: 200,
+                    hideControlOnEnd: true,
+                    controls: true,
+                    nextText: '',
+                    prevText: '',
+                    adaptiveHeight: true,
+                    onSliderLoad: function() {
+                        $malinkyGallerySliderWrapper.addClass('malinky-gallery-slider-wrapper-show');
+                        clearTimeout(mobileMalinkyLoadingTimer[key]);                
+                        $malinkyGallerySliderLoading.hide();
+                        $('#' + value.id + '.malinky-gallery-slider li').css('width', malinkySliderSlideWidth());
+                        $('#' + value.id + ' .malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
+                        $('#' + value.id).parent().height($('#' + value.id + '.malinky-gallery-slider li').height());
+                    },
+                    onSlideBefore: function($slideElement, oldIndex, newIndex) {
+                        /*
+                         * Find next image in whole slider object.
+                         * Then swap out the data-src into the actual src ready of next slide.
+                         * Loads the next image on mobile so the next is partially visible.
+                         */
+                        var $lazyNextImg = mobileSlider[key].find('.lazy').slice(0,1);
+                        $.each($lazyNextImg, function(index, value) {
+                            var loadImg = $(value).attr('data-src');
+                            $(value).attr('src', loadImg);
+                            $(value).removeClass('lazy');
+                        });
+                    }
                 }
-            }
 
-            
-            /*
-             * Set up the slide width.
-             * Uses the original image width and compares against the width of the containing li.
-             * This generally determines image width between portrait and landscapes and cases where
-             * the original image is not as wide as the containing li.
-             */
-            function malinkySliderSlideWidth () {
-                var originalImageWidth = document.querySelector('.malinky-gallery-slider li img').naturalWidth;
-                if (originalImageWidth + 100 < $('.malinky-gallery-slider li').width()) {
-                    //Generally in landscape.
-                    slideWidth = originalImageWidth;
-                } else {
-                    //Generally in portrait.
-                    slideWidth = $('.malinky-gallery-slider li').width() - 100;
+                
+                /*
+                 * Set up the slide width.
+                 * Uses the original image width and compares against the width of the containing li.
+                 * This generally determines image width between portrait and landscapes and cases where
+                 * the original image is not as wide as the containing li.
+                 */
+                function malinkySliderSlideWidth () {
+                    var originalImageWidth = document.querySelector('#' + value.id + '.malinky-gallery-slider li img').naturalWidth;
+                    if (originalImageWidth + 100 < $('#' + value.id + '.malinky-gallery-slider li').width()) {
+                        //Generally in landscape.
+                        slideWidth = originalImageWidth;
+                    } else {
+                        //Generally in portrait.
+                        slideWidth = $('#' + value.id + '.malinky-gallery-slider li').width() - 100;
+                    }
+                    return slideWidth;
                 }
-                return slideWidth;
-            }
-            
+                
 
-            //Set global malinkySliderCurrentWidth.
-            var malinkySliderCurrentWidth = $(window).width();
+                //Set global malinkySliderCurrentWidth.
+                var malinkySliderCurrentWidth = $(window).width();
 
-            
-            /**
-             * After a resize which is an orientation switch reload BX Slider so new thumbnail sizes are generated.
-             */
-            var malinkySliderResize = debounce(function() {
-                if (malinkySliderCurrentWidth != $(window).width()) {
-                    $('.malinky-gallery-slider-wrapper').removeClass('malinky-gallery-slider-wrapper-show');
-                    $('.malinky-gallery-slider-loading').show();
-                    mobileSlider.reloadSlider(malinkySliderSetup);
-                    //Resave new width into global malinkySliderCurrentWidth
-                    malinkySliderCurrentWidth = $(window).width();
-                }
-            }, 250);
+                
+                /**
+                 * After a resize which is an orientation switch reload BX Slider so new thumbnail sizes are generated.
+                 */
+                var malinkySliderResize = debounce(function() {
+                    if (malinkySliderCurrentWidth != $(window).width()) {
+                        $malinkyGallerySliderWrapper.removeClass('malinky-gallery-slider-wrapper-show');
+                        $malinkyGallerySliderLoading.show();
+                        mobileSlider[key].reloadSlider(malinkySliderSetup);
+                        //Resave new width into global malinkySliderCurrentWidth
+                        malinkySliderCurrentWidth = $(window).width();
+                    }
+                }, 250);
 
 
-            /*
-             * On resize, run the function expression mgsResize.
-             * resize event is namespaced with mgs.
-             */
-            $(window).bind('resize.mgs', malinkySliderResize)
+                /*
+                 * On resize, run the function expression mgsResize.
+                 * resize event is namespaced with mgs.
+                 */
+                $(window).bind('resize.mgs', malinkySliderResize)
 
 
-            /**
-             * Returns a function, that, as long as it continues to be invoked, will not
-             * be triggered. The function will be called after it stops being called for
-             * N milliseconds. If `immediate` is passed, trigger the function on the
-             * leading edge, instead of the trailing.
-             */
-            function debounce(func, wait, immediate) {
-                var timeout;
-                return function() {
-                    var context = this, args = arguments;
-                    var later = function() {
-                        timeout = null;
-                        if (!immediate) func.apply(context, args);
+                /**
+                 * Returns a function, that, as long as it continues to be invoked, will not
+                 * be triggered. The function will be called after it stops being called for
+                 * N milliseconds. If `immediate` is passed, trigger the function on the
+                 * leading edge, instead of the trailing.
+                 */
+                function debounce(func, wait, immediate) {
+                    var timeout;
+                    return function() {
+                        var context = this, args = arguments;
+                        var later = function() {
+                            timeout = null;
+                            if (!immediate) func.apply(context, args);
+                        };
+                        var callNow = immediate && !timeout;
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                        if (callNow) func.apply(context, args);
                     };
-                    var callNow = immediate && !timeout;
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                    if (callNow) func.apply(context, args);
                 };
-            };
 
 
-            /*
-             * Launch mobile slider.
-             */
-            var mobileSlider = $('.malinky-gallery-slider').bxSlider(malinkySliderSetup);
+                /*
+                 * Launch mobile slider.
+                 */
+                mobileSlider[key] = $('#' + value.id).bxSlider(malinkySliderSetup);
+
+            });
 
         }
 
