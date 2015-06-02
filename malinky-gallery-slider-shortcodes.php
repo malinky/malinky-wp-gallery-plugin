@@ -23,7 +23,7 @@ function malinky_gallery( $atts )
 		array(
 	        'malinky_images_per_slide' 	=> 4,
 	        'malinky_field_label' 		=> 'malinky_gallery',
-	        'malinky_col_item'	 		=> 'col-item col-item-quarter col-item-half--small',
+	        'malinky_col_item'	 	=> 'col-item col-item-half--small col-item-quarter--medium col-item-quarter--large col-item-quarter--xlarge',
     	),
 		$atts,
 		'malinky-slider'
