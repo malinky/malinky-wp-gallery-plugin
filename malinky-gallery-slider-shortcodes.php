@@ -19,7 +19,7 @@ add_shortcode( 'malinky-gallery', 'malinky_gallery' );
 function malinky_gallery( $atts )
 {
 
-	global $slider_count;
+	global $malinky_slider_count;
 
 	$atts = shortcode_atts(
 		array(
@@ -70,7 +70,7 @@ function malinky_gallery( $atts )
 			<div class="malinky-gallery-slider-loading"></div>
 			<div class="malinky-gallery-slider-wrapper" itemscope itemtype="http://schema.org/ImageGallery">
 				<meta itemprop="about" content="<?php echo esc_attr( get_the_title() ); ?> Photos" />
-				<ul id="malinky-gallery-slider-<?php echo $slider_count; ?>" class="malinky-gallery-slider">
+				<ul id="malinky-gallery-slider-<?php echo $malinky_slider_count; ?>" class="malinky-gallery-slider">
 		<?php }
 
 				if ( malinky_is_tablet_computer() ) {
@@ -138,6 +138,6 @@ function malinky_gallery( $atts )
 
     }
 
-    $slider_count++;
+    $malinky_slider_count++;
 
 }
