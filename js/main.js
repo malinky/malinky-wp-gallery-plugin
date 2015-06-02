@@ -357,7 +357,7 @@ jQuery(document).ready(function($){
                     slideMargin: 24,
                     infiniteLoop: false,
                     easing: 'ease',
-                    speed: 200,
+                    speed: 400,
                     hideControlOnEnd: true,
                     controls: true,
                     nextText: '',
