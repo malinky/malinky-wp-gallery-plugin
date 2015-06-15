@@ -47,8 +47,12 @@ class Malinky_Gallery_Slider
 	     * ------------------------------------------------------------------------ */
 		include( 'malinky-gallery-slider-shortcodes.php' );
 
-		global $slider_count;
-		$slider_count = 1;
+		/*
+		 * Set the global variable to count the sliders.
+		 * Used when there are multiple instances on the same page.
+		 */
+		global $malinky_slider_count;
+		$malinky_slider_count = 1;
 
 	}
 
