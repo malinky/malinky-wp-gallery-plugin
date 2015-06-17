@@ -73,6 +73,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
                     h: parseInt(size[1], 10)
                 };
             }
+
             /*
              * Original image.
              */
@@ -81,6 +82,16 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
                 w: item.w,
                 h: item.h
             };
+
+            /*
+             * Set the caption if it has one.
+             * HTML should be <meta itemprop="caption description" value="" />
+             */
+            if (linkEl.children[1]) {
+                if (linkEl.children[1].hasAttribute('value')) {
+                    item.title = linkEl.children[1].getAttribute('value');    
+                }
+            }
 
             /*
              * Save for getThumbBoundsFn.
@@ -114,7 +125,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
      */
     var onThumbnailsClick = function(e)
     {
-
+      
         e = e || window.event;
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
@@ -136,7 +147,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
          */
         var clickedGallery = document.querySelector(gallerySelector),
             index;
-
+            
         /*
          * Save index of the clicked thumbnail.
          */
@@ -176,7 +187,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
          * Loop through thumbnails and return items object.
          */
         items = parseThumbnailElements(galleryElement);
-
+        
         /*
          * Define options.
          */
@@ -301,7 +312,15 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
 
 };
 
-//Get all gallery sliders on the page.
+/**
+ * Using the class .malinky-gallery-slider triggers a sliding gallery that uses bxslider.
+ * Using the class .malinky-gallery just triggers any images within that div to use photoswipe.
+ * Both holding divs should hold the equivalent #malinky-gallery-slider-x or #malinky-gallery-x (where x is a number).
+ */
+
+/*
+ * Get all gallery sliders on the page.
+ */
 var malinkyGallerySliders = document.querySelectorAll('.malinky-gallery-slider');
 
 /*
@@ -309,6 +328,18 @@ var malinkyGallerySliders = document.querySelectorAll('.malinky-gallery-slider')
  */
 for (x = 0; x < malinkyGallerySliders.length; x++) {
     initPhotoSwipeFromDOM('#' + malinkyGallerySliders[x].id);
+}
+
+/*
+ * Get all galleries.
+ */
+var malinkyGallery = document.querySelectorAll('.malinky-gallery');
+
+/*
+ * Execute Photoswipe function for each gallery.
+ */
+for (x = 0; x < malinkyGallery.length; x++) {
+    initPhotoSwipeFromDOM('#' + malinkyGallery[x].id);
 }
 
 
