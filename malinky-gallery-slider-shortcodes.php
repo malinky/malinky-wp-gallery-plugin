@@ -51,7 +51,7 @@ function malinky_gallery( $atts )
 	if ( ! $image_meta ) return;
 
 	$total_images = count( $image_meta );
-
+	
 	/**
 	 * $current_image used in a similar way to post count. Actual array keys starting at 0.
 	 */
