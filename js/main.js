@@ -325,6 +325,7 @@ var malinkyGallerySliders = document.querySelectorAll('.malinky-gallery-slider')
 
 /*
  * Execute Photoswipe function for each gallery slider.
+ * Fetches the id which start at #malinky-gallery-slider-1.
  */
 for (x = 0; x < malinkyGallerySliders.length; x++) {
     initPhotoSwipeFromDOM('#' + malinkyGallerySliders[x].id);
@@ -355,7 +356,7 @@ jQuery(document).ready(function($){
     function malinkyShowLoading(key)
     {
         if (key) {
-            $('#' + (key -1)).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading').show();
+            $('#malinky-gallery-slider-' + (key + 1)).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading').show();
         } else {
             $('.malinky-gallery-slider-loading').show();
         }
@@ -365,7 +366,7 @@ jQuery(document).ready(function($){
     /**
      * Slider used generally on sport pages, projects and groundcare machinery
      */
-    $('.malinky-gallery-slider').imagesLoaded(function(instance) {
+    //$('.malinky-gallery-slider').imagesLoaded(function(instance) {
 
         //If not mobile.
         if (!malinky_gallery_slider_mobile_detect.malinky_is_phone) {
@@ -380,14 +381,16 @@ jQuery(document).ready(function($){
                 $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
                 $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
 
-                malinkyLoadingTimer[key] = setTimeout(malinkyShowLoading(key), 750);
+                malinkyLoadingTimer[key] = setTimeout(function() {
+                    malinkyShowLoading(key);
+                }, 750);
 
                 //Slider set up.
                 slider[key] = $('#' + value.id).bxSlider({
                     pager: false,
                     slideMargin: 24,
                     infiniteLoop: false,
-                    easing: 'ease',
+                    easing: 'linear',
                     speed: 400,
                     hideControlOnEnd: true,
                     controls: true,
@@ -396,7 +399,7 @@ jQuery(document).ready(function($){
                     adaptiveHeight: false,
                     onSliderLoad: function($slider,activeIndex) {
                         $malinkyGallerySliderWrapper.addClass('malinky-gallery-slider-wrapper-show');
-                        clearTimeout(malinkyLoadingTimer[key]);
+                        //clearTimeout(malinkyLoadingTimer[key]);
                         $malinkyGallerySliderLoading.hide();
                         /*
                          * Once slider is loaded then load next slide as only first is loaded initially.
@@ -445,7 +448,9 @@ jQuery(document).ready(function($){
                 $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
                 $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
 
-                mobileMalinkyLoadingTimer[key] = setTimeout(malinkyShowLoading(key), 750);
+                mobileMalinkyLoadingTimer[key] = setTimeout(function() {
+                    malinkyShowLoading(key);
+                }, 750);
 
                 /*
                  * Slider set up object for both initial and resized.
@@ -560,6 +565,6 @@ jQuery(document).ready(function($){
 
         }
 
-    });
+    //});
 
 });
