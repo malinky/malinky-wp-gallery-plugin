@@ -363,27 +363,33 @@ jQuery(document).ready(function($){
     }
 
 
+    var malinkyLoadingTimer = [];
+    /**
+     * Create timer for each gallery slider.
+     */
+    $.each(malinkyGallerySliders, function(key, value) {
+        malinkyLoadingTimer[key] = setTimeout(function() {
+            malinkyShowLoading(key);
+        }, 500);
+    });
+
+
     /**
      * Slider used generally on sport pages, projects and groundcare machinery
      */
-    //$('.malinky-gallery-slider').imagesLoaded(function(instance) {
+    $('.malinky-gallery-slider').imagesLoaded(function(instance) {
 
         //If not mobile.
         if (!malinky_gallery_slider_mobile_detect.malinky_is_phone) {
             
             //Used to assign unique sliders to a slider array.
             var slider = [];
-            var malinkyLoadingTimer = [];
-
+            
             //Create bxslider for each gallery slider.
             $.each(malinkyGallerySliders, function(key, value) {
 
                 $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
                 $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
-
-                malinkyLoadingTimer[key] = setTimeout(function() {
-                    malinkyShowLoading(key);
-                }, 750);
 
                 //Slider set up.
                 slider[key] = $('#' + value.id).bxSlider({
@@ -440,7 +446,7 @@ jQuery(document).ready(function($){
             
             //Used to assign unique sliders to a slider array.
             var mobileSlider = [];
-            var mobileMalinkyLoadingTimer = [];
+            //var mobileMalinkyLoadingTimer = [];
 
             //Create bxslider for each gallery slider.
             $.each(malinkyGallerySliders, function(key, value) {
@@ -448,9 +454,9 @@ jQuery(document).ready(function($){
                 $malinkyGallerySliderWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
                 $malinkyGallerySliderLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
 
-                mobileMalinkyLoadingTimer[key] = setTimeout(function() {
+                /*mobileMalinkyLoadingTimer[key] = setTimeout(function() {
                     malinkyShowLoading(key);
-                }, 750);
+                }, 750);*/
 
                 /*
                  * Slider set up object for both initial and resized.
@@ -468,7 +474,7 @@ jQuery(document).ready(function($){
                     adaptiveHeight: true,
                     onSliderLoad: function() {
                         $malinkyGallerySliderWrapper.addClass('malinky-gallery-slider-wrapper-show');
-                        clearTimeout(mobileMalinkyLoadingTimer[key]);                
+                        clearTimeout(malinkyLoadingTimer[key]);                
                         $malinkyGallerySliderLoading.hide();
                         $('#' + value.id + '.malinky-gallery-slider li').css('width', malinkySliderSlideWidth());
                         $('#' + value.id + ' .malinky-gallery-slider-image').css({'position': 'relative', 'left': '50px'});
@@ -565,6 +571,6 @@ jQuery(document).ready(function($){
 
         }
 
-    //});
+    });
 
 });
