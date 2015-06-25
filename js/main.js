@@ -399,7 +399,7 @@ jQuery(document).ready(function($){
                     adaptiveHeight: false,
                     onSliderLoad: function($slider,activeIndex) {
                         $malinkyGallerySliderWrapper.addClass('malinky-gallery-slider-wrapper-show');
-                        //clearTimeout(malinkyLoadingTimer[key]);
+                        clearTimeout(malinkyLoadingTimer[key]);
                         $malinkyGallerySliderLoading.hide();
                         /*
                          * Once slider is loaded then load next slide as only first is loaded initially.
