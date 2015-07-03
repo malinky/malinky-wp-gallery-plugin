@@ -97,7 +97,7 @@ function malinky_gallery( $atts )
 											<?php if ( malinky_is_tablet() ) { ?>
 												<img data-src="<?php echo esc_url( $image['sizes']['malinky_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } else { ?>
-												<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['	malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
+												<img data-src="<?php echo esc_url( $image['sizes']['malinky_mini_thumbnail'] ); ?>" class="lazy" data-imageps="<?php echo esc_attr( $atts['malinky_images_per_slide'] ); ?>" alt="<?php echo esc_attr( $atts['alt_tag'] ); ?>" itemprop="thumbnail" />
 											<?php } ?>
 										
 										<?php } ?>
