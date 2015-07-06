@@ -124,7 +124,7 @@ gulp.task('dev-styles', function() {
  * Minify JS.
  */
 gulp.task('dev-scripts', function() {
-    return gulp.src('js/*.js')
+    return gulp.src(['js/*.js', 'bower_components/flickity/dist/flickity.pkgd.js'])
     .pipe(concat('scripts.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('dev/js'));
@@ -198,7 +198,7 @@ gulp.task('prod-styles', function() {
  * Minify JS.
  */
 gulp.task('prod-scripts', function() {
-    return gulp.src('js/*.js')
+    return gulp.src(['js/*.js', 'bower_components/flickity/dist/flickity.pkgd.js'])
     .pipe(concat('scripts.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('prod/js'));
