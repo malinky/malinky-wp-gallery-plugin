@@ -1,0 +1,19 @@
+{
+  "name": "malinky-wp-gallery-slider-plugin",
+  "version": "0.0.0",
+  "homepage": "https://github.com/malinky/malinky-wp-gallery-slider-plugin",
+  "authors": [
+    "Craig Ramsay <craig@malinkymedia.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "flickity": "~1.1.0"
+  }
+}
