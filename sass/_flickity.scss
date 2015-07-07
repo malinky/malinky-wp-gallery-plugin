@@ -17,12 +17,8 @@
 }
 
 .flickity-enabled.is-draggable {
-  -webkit-tap-highlight-color: transparent;
-          tap-highlight-color: transparent;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .flickity-enabled.is-draggable .flickity-viewport {
@@ -45,11 +41,8 @@
   background: #20944d;
   cursor: pointer;
   /* vertically center */
-  -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%);
-  -webkit-transition: all .25s ease-in-out;
-          transition: all .25s ease-in-out;          
+  transform: translateY(-50%);
+  transition: all .25s ease-in-out;          
 }
 
 .flickity-prev-next-button:hover { background: #1c8444; }

@@ -3,15 +3,15 @@
 GENERAL
 **********************************************************************
 */
-.malinky-gallery-cell {
+.malinky-gallery-slider-cell {
   width: 200px;
   height: 150px;
   margin-right: 24px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   background: #ececec;
 }
 
-.malinky-gallery-wrapper {
+.malinky-gallery-slider-wrapper {
   height: 150px;
   visibility: hidden;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -19,10 +19,10 @@ GENERAL
   opacity: 0;
   height: 0;
   -webkit-transition: opacity 0.4s ease-in;
-  transition: opacity 0.4s ease-in;
+          transition: opacity 0.4s ease-in;
 }
 
-.malinky-gallery-wrapper-show {
+.malinky-gallery-slider-wrapper-show {
   visibility: visible;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
   /* IE 8 */
@@ -30,14 +30,18 @@ GENERAL
   height: auto;
 }
 
-.malinky-gallery-loading {
+.malinky-gallery-slider-loading {
   display: none;
   height: 100px;
   background: url(../img/loader.gif) 50% no-repeat;
   background-size: 50px;
 }
 
-.malinky-gallery-image {
+.malinky-gallery {
+  margin-bottom: 20px;
+}
+
+.malinky-gallery-cell {
   margin-bottom: 20px;
 }
 
@@ -46,9 +50,6 @@ GENERAL
 FLICKITY
 **********************************************************************
 */
-/*! Flickity v1.1.0
-http://flickity.metafizzy.co
----------------------------------------------- */
 .flickity-enabled {
   position: relative;
 }
@@ -69,14 +70,12 @@ http://flickity.metafizzy.co
   height: 100%;
 }
 
-/* draggable */
 .flickity-enabled.is-draggable {
-  -webkit-tap-highlight-color: transparent;
   tap-highlight-color: transparent;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .flickity-enabled.is-draggable .flickity-viewport {
@@ -90,7 +89,6 @@ http://flickity.metafizzy.co
   cursor: grabbing;
 }
 
-/* ---- previous/next buttons ---- */
 .flickity-prev-next-button {
   position: absolute;
   top: -34px;
@@ -101,10 +99,10 @@ http://flickity.metafizzy.co
   cursor: pointer;
   /* vertically center */
   -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
   -webkit-transition: all .25s ease-in-out;
-  transition: all .25s ease-in-out;
+          transition: all .25s ease-in-out;
 }
 
 .flickity-prev-next-button:hover {
@@ -153,7 +151,6 @@ http://flickity.metafizzy.co
   font-size: 26px;
 }
 
-/* ---- page dots ---- */
 .flickity-page-dots {
   position: absolute;
   width: 100%;

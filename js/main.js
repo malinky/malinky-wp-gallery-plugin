@@ -356,9 +356,9 @@ jQuery(document).ready(function($){
     function malinkyShowLoading(key)
     {   
         if (key) {
-            $('#malinky-gallery-' + (key + 1)).parents('.malinky-gallery-wrapper').prev('.malinky-gallery-loading').show();
+            $('#malinky-gallery-' + (key + 1)).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading').show();
         } else {
-            $('.malinky-gallery-loading').show();
+            $('.malinky-gallery-slider-loading').show();
         }
     }
 
@@ -379,20 +379,20 @@ jQuery(document).ready(function($){
     //Create a flickity for each gallery slider.
     $.each(malinkyGallerySliders, function(key, value) {
 
-        $malinkyGalleryWrapper = $('#' + value.id).parents('.malinky-gallery-wrapper');
-        $malinkyGalleryLoading = $('#' + value.id).parents('.malinky-gallery-wrapper').prev('.malinky-gallery-loading');
+        $malinkyGalleryWrapper = $('#' + value.id).parents('.malinky-gallery-slider-wrapper');
+        $malinkyGalleryLoading = $('#' + value.id).parents('.malinky-gallery-slider-wrapper').prev('.malinky-gallery-slider-loading');
 
         slider[key] = $('#' + value.id).flickity({
-              cellSelector: '.malinky-gallery-cell',
+              cellSelector: '.malinky-gallery-slider-cell',
               imagesLoaded: true,
-              lazyLoad: 10,
+              lazyLoad: 3,
               contain: true,
               freeScroll: true,
               pageDots: false,
               cellAlign: 'left'
         });
 
-        $malinkyGalleryWrapper.addClass('malinky-gallery-wrapper-show');
+        $malinkyGalleryWrapper.addClass('malinky-gallery-slider-wrapper-show');
         clearTimeout(malinkyLoadingTimer[key]);
         $malinkyGalleryLoading.hide();
 
