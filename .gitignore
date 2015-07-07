@@ -1,4 +1,5 @@
 node_modules
+bower_components
 sourcemaps
 .sass-cache
 dev
