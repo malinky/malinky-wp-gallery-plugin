@@ -71,9 +71,9 @@ gulp.task('default', function() {
 
 
 /* ------------------------------------------------------------------------ *
- * Dev
+ * Dist
  * 
- * gulp dev
+ * gulp dist
  *
  * Move all applicable files and folders.
  * Minify CSS, Autoprefix.
@@ -81,19 +81,19 @@ gulp.task('default', function() {
  * ------------------------------------------------------------------------ */
 
 /**
- * Delete all contents of dev folder.
+ * Delete all contents of dist folder.
  */
-gulp.task('dev-clean', function (cb) {
-    del('dev/*', cb);
+gulp.task('dist-clean', function (cb) {
+    del('dist/*', cb);
 });
 
 
 /**
   * Move root .php files.
   */
-gulp.task('dev-move-files', function() {
+gulp.task('dist-move-files', function() {
     return gulp.src('*.php')
-        .pipe(gulp.dest('dev'));
+        .pipe(gulp.dest('dist'));
 });
 
 
@@ -102,9 +102,9 @@ gulp.task('dev-move-files', function() {
   * Move img only.
   * No sourcemaps used so no need to move css and js folders.
   */
-gulp.task('dev-move-dir', function() {
+gulp.task('dist-move-dir', function() {
     return gulp.src('img/**', { base: './'} )
-        .pipe(gulp.dest('dev'));
+        .pipe(gulp.dest('dist'));
 });
 
 
@@ -112,107 +112,33 @@ gulp.task('dev-move-dir', function() {
  * Compile our SASS, autoprefix.
  * Doesn't support globs hence the return sass rather than gulp.src.
  */
-gulp.task('dev-styles', function() {
+gulp.task('dist-styles', function() {
     return sass('sass', { style: 'compressed' })
     .on('error', function (err) {console.error('SASS Error - ', err.message);})
     .pipe(autoprefixer({browsers: ['last 5 versions']}))
-    .pipe(gulp.dest('dev/css'));
+    .pipe(gulp.dest('dist/css'));
 });
 
 
 /**
  * Minify JS.
  */
-gulp.task('dev-scripts', function() {
+gulp.task('dist-scripts', function() {
     return gulp.src(['js/*.js', 'bower_components/flickity/dist/flickity.pkgd.js'])
     .pipe(concat('scripts.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest('dev/js'));
+    .pipe(gulp.dest('dist/js'));
 });
 
 
 /**
- * Set up dev task.
+ * Set up dist task.
  */
-gulp.task('dev', function() {
-    runSequence('dev-clean', 
-                'dev-move-files', 
-                'dev-move-dir', 
-                'dev-styles', 
-                'dev-scripts'
-            );
-})
-
-
-/* ------------------------------------------------------------------------ *
- * Prod
- * 
- * gulp prod
- *
- * Move all applicable files and folders.
- * Minify CSS, Autoprefix.
- * Minify JS.
- * ------------------------------------------------------------------------ */
-
-/**
- * Delete all contents of prod folder.
- */
-gulp.task('prod-clean', function (cb) {
-    del('prod/*', cb);
-});
-
-
-/**
-  * Move root .php files.
-  */
-gulp.task('prod-move-files', function() {
-    return gulp.src('*.php')
-        .pipe(gulp.dest('prod'));
-});
-
-
-/**
-  * Move root directories and their contents.
-  * Move img only.
-  * No sourcemaps used so no need to move css and js folders.
-  */
-gulp.task('prod-move-dir', function() {
-    return gulp.src('img/**', { base: './'} )
-        .pipe(gulp.dest('prod'));
-});
-
-
-/**
- * Compile our SASS, autoprefix.
- * Doesn't support globs hence the return sass rather than gulp.src.
- */
-gulp.task('prod-styles', function() {
-    return sass('sass', { style: 'compressed' })
-    .on('error', function (err) {console.error('SASS Error - ', err.message);})
-    .pipe(autoprefixer({browsers: ['last 5 versions']}))
-    .pipe(gulp.dest('prod/css'));
-});
-
-
-/**
- * Minify JS.
- */
-gulp.task('prod-scripts', function() {
-    return gulp.src(['js/*.js', 'bower_components/flickity/dist/flickity.pkgd.js'])
-    .pipe(concat('scripts.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('prod/js'));
-});
-
-
-/**
- * Set up prod task.
- */
-gulp.task('prod', function() {
-    runSequence('prod-clean', 
-                'prod-move-files', 
-                'prod-move-dir', 
-                'prod-styles', 
-                'prod-scripts'
+gulp.task('dist', function() {
+    runSequence('dist-clean', 
+                'dist-move-files', 
+                'dist-move-dir', 
+                'dist-styles', 
+                'dist-scripts'
             );
 })
