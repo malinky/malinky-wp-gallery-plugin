@@ -374,7 +374,8 @@ jQuery(document).ready(function($){
     });
     
     //Used to assign unique sliders to a slider array.
-    var slider = [];
+    var slider = [],
+        cellCount = '';
 
     //Create a flickity for each gallery slider.
     $.each(malinkyGallerySliders, function(key, value) {
@@ -388,9 +389,25 @@ jQuery(document).ready(function($){
               lazyLoad: 3,
               contain: true,
               freeScroll: true,
-              pageDots: false,
-              cellAlign: 'left'
+              pageDots: false
         });
+
+        /*
+         * Advance to next cell on load so a double click isn't needed to get to the second.
+         * This is due to the use of contain.
+         */
+        slider[key].flickity('next');
+
+        /*
+         * 3 images are always shown.
+         * If 3 then hide next/prev to avoid annoyance of them being clickable not scrolling.
+         * This is due to the use of contain.
+         */
+        cellCount = slider[key].data('flickity').cells.length;
+
+        if (cellCount == 3) {
+            $('.flickity-prev-next-button').css('display', 'none');
+        }
 
         $malinkyGalleryWrapper.addClass('malinky-gallery-slider-wrapper-show');
         clearTimeout(malinkyLoadingTimer[key]);
