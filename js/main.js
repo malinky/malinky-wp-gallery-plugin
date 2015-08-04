@@ -203,7 +203,13 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
 
                 return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
                 //return {x:0, y:0, w:rect.width};
-            }
+            },
+            shareButtons: [
+                {id:'facebook', label:'Share on Facebook', url:'https://www.facebook.com/sharer/sharer.php?u={{image_url}}'},
+                {id:'twitter', label:'Tweet', url:'https://twitter.com/intent/tweet?text={{text}}&url={{image_url}}'},
+                {id:'pinterest', label:'Pin it', url:'http://www.pinterest.com/pin/create/button/?url={{url}}&media={{image_url}}&description={{text}}'},
+                {id:'download', label:'Download image', url:'{{raw_image_url}}', download:true}
+            ]
         };
 
         if(disableAnimation) {
@@ -400,12 +406,12 @@ jQuery(document).ready(function($){
 
         /*
          * 3 images are always shown.
-         * If 3 then hide next/prev to avoid annoyance of them being clickable not scrolling.
+         * If less then or equal to 3 then hide next/prev to avoid annoyance of them being clickable not scrolling.
          * This is due to the use of contain.
          */
         cellCount = slider[key].data('flickity').cells.length;
 
-        if (cellCount == 3) {
+        if (cellCount <= 3) {
             $('.flickity-prev-next-button').css('display', 'none');
         }
 
