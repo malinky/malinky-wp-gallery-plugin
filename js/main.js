@@ -12,7 +12,8 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
     var parseThumbnailElements = function(el)
     {
 
-        var thumbElements = el.getElementsByTagName('a'),
+        //var thumbElements = el.getElementsByTagName('a'),
+        var thumbElements = el.querySelectorAll('a.malinky-photoswipe-image'),
             numNodes = thumbElements.length,
             items = [],
             divEl,
@@ -89,7 +90,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
              */
             if (linkEl.children[1]) {
                 if (linkEl.children[1].hasAttribute('value')) {
-                    item.title = linkEl.children[1].getAttribute('value');    
+                    item.title = linkEl.children[1].getAttribute('value');
                 }
             }
 
@@ -125,11 +126,27 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
      */
     var onThumbnailsClick = function(e)
     {
-      
-        e = e || window.event;
-        e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
+        e = e || window.event;
         var eTarget = e.target || e.srcElement;
+
+        /*
+         * Find if root element is a clicked overlay.
+         */
+        var clickedOverlay = closest(eTarget, function(el) {
+            //return (el.tagName && el.tagName.toUpperCase() === 'DIV' && el.classList.contains('malinky-photoswipe-image-overlay'));
+            //ie9 version.
+            return (el.tagName && el.tagName.toUpperCase() === 'DIV' && el.className.indexOf('malinky-photoswipe-image-overlay') > -1);
+        });
+
+        if(clickedOverlay) {
+            return;
+        }
+
+        /*
+         * If no clicked overlay continue trying to open an image.
+         */
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
         /*
          * Find root element of clicked slide which is a div.
@@ -159,7 +176,7 @@ var initPhotoSwipeFromDOM = function(gallerySelector) {
         if(index >= 0) {
             openPhotoSwipe( index, clickedGallery );
         }
-
+        
         return false;
 
     };
