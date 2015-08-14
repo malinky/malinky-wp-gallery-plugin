@@ -23,10 +23,36 @@
     background-size: 50px;
 }
 
-.malinky-gallery-slider-cell {
+/*.malinky-gallery-slider-cell {
     width: 32.5%;
     margin-right: 1.25%;
     background: #ececec;
+}*/
+
+.malinky-gallery-slider-cell {
+    width: 23.875%;
+    margin-right: 1.5%;
+    background: #ececec;
+}
+
+@media screen and (max-width: 767px) {
+
+    .malinky-gallery-slider-cell {
+        width: 32.5%;
+        margin-right: 1.25%;
+        background: #ececec;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+
+    .malinky-gallery-slider-cell {
+        width: 49.25%;
+        margin-right: 1.5%;
+        background: #ececec;
+    }
+
 }
 
 /*

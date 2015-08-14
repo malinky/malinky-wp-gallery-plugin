@@ -410,16 +410,17 @@ jQuery(document).ready(function($){
               cellSelector: '.malinky-gallery-slider-cell',
               imagesLoaded: true,
               lazyLoad: 3,
-              contain: true,
+              //contain: true,
+              cellAlign: 'left',
               freeScroll: true,
               pageDots: false
         });
 
         /*
          * Advance to next cell on load so a double click isn't needed to get to the second.
-         * This is due to the use of contain.
+         * This is due to the use of contain. If using contain then don't use cellAlign: 'left'
          */
-        slider[key].flickity('next');
+        //slider[key].flickity('next');
 
         /*
          * 3 images are always shown.
